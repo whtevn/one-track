@@ -1,3 +1,13 @@
+import { Map } from 'immutable';
+const escapeStringRegexp = require('escape-string-regexp');
+
+export const INITIAL_ROUTES = Map({GET:Map({}), POST:Map({}), PUT:Map({}), DELETE:Map({})});
+
+export const GET    = 'GET'   ;
+export const POST   = 'POST'  ;
+export const PUT    = 'PUT'   ;
+export const DELETE = 'DELETE';
+export const NO_SUCH_ROUTE = { code: 404, msg: 'NO SUCH ROUTE' };
 
 export function objectify (keys, values) {
   let obj = {};
@@ -15,8 +25,12 @@ export function regexify(path){
   }
 }
 
-export function Set_Routes(routes=INITIAL_ROUTES, method=GET, opts={}) {
+export function routify(routes=INITIAL_ROUTES, method=GET, opts={}) {
   return opts.path ?  routes.setIn([method, opts.path.description], opts) : routes
 }
 
+export function paramify(path, description, params){
+  const vals = path.match(new RegExp(description)).map(x=>x);
+  return objectify(params, vals.slice(1, vals.length));
+}
 

@@ -1,15 +1,14 @@
-import {Map} from 'immutable';
-import { objectify, regexify, routify } from './lib';
-
-const escapeStringRegexp = require('escape-string-regexp');
-
-const INITIAL_ROUTES = Map({GET:Map({}), POST:Map({}), PUT:Map({}), DELETE:Map({})});
-const GET    = 'GET'   ;
-const POST   = 'POST'  ;
-const PUT    = 'PUT'   ;
-const DELETE = 'DELETE';
-
-const NO_SUCH_ROUTE = { code: 404, msg: 'NO SUCH ROUTE' };
+import { 
+   GET,
+   POST,
+   PUT,
+   DELETE,
+   NO_SUCH_ROUTE,
+   objectify,
+   regexify,
+   routify,
+   paramify 
+ }   from './lib';
 
 export default class RouteManager {
   constructor(opts){
@@ -29,20 +28,17 @@ export default class RouteManager {
   DELETE() { this.add_route(DELETE , ...arguments); }
 
   find(method, path, body){
-    const route_opts = this.routes
+    const entry = this.routes
                       .get(method)
                       .filter(
                         (val, test) => {
                           return path.match(new RegExp(test))
                         }
-                      )
-
-    const entry = route_opts.first();
+                      ).first();
 
     if(!entry) throw NO_SUCH_ROUTE
 
-    const vals = path.match(new RegExp(entry.path.description)).map(x=>x);
-    const params = objectify(entry.path.params, vals.slice(1, vals.length));
+    const params = paramify(path, entry.path.description, entry.path.params)
 
     return entry.route.classname[entry.route.func](Object.assign({}, body, params));
   }
