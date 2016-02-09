@@ -1,14 +1,15 @@
 {
 	"name": "one-track",
+  "repository": "https://github.com/whtevn/one-track.git",
 	"version": "0.0.1",
-	"description": "",
+	"description": "very simple router middleware",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "Evan Short < evan.short@gmail.com >",
+	"license": "MIT",
 	"dependencies": {
 		"immutable": "^3.7.6"
 	},
