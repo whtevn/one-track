@@ -17,6 +17,8 @@ export default class RouteManager {
 
 
   add_route(method, path, classname, func){
+    if(typeof func === 'string') func = classname[func];
+
     const new_path = regexify(path);
     this.routes = routify(this.routes, method, 
                               {path: new_path, route: {classname, func}})
@@ -40,7 +42,7 @@ export default class RouteManager {
 
     const params = paramify(path, entry.path.description, entry.path.params)
 
-    return entry.route.classname[entry.route.func](Object.assign({}, body, params));
+    return entry.route.func.call(entry.route.classname, Object.assign({}, body, params));
   }
 
 }
