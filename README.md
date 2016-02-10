@@ -45,7 +45,7 @@ Using with Koa2
     Router.GET('/path/to/:id', UserSingleton, 'find');       
 
     app.use(bodyParser());
-    app.use(RouteMiddleware(RouterCont))
+    app.use(RouteMiddleware(Router))
 
     app.listen(3000);
     console.log("app is listening");
