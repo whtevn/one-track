@@ -6,8 +6,7 @@
 	"main": "build/index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "babel -d build *.js",
-		"prepublish": "npm run build"
+		"build": "babel -d build *.js"
 	},
 	"keywords": [],
 	"author": "Evan Short < evan.short@gmail.com >",
