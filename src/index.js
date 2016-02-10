@@ -10,10 +10,9 @@ import {
 
 export default class RouteManager {
   constructor(router=null){
-    if(router && router.routes &&
-        typeof router.routes.asImmutable === function) {       // if an appropriately shaped router is given
-          this.routes = router.routes.asImmutable();           // use its routes to seed a new RouteManager
-        }                                                      
+    if(router && router.routes && typeof router.routes.asImmutable === function) {       
+          this.routes = router.routes.asImmutable();           // if an appropriately shaped router is given
+        }                                                      // use its routes to seed a new RouteManager
   }
                                                                
   GET()    { return this.new_route(GET,    ...arguments); }    // define RouteManager.GET

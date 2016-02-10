@@ -5,7 +5,8 @@
 	"description": "very simple router middleware",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src lib"
 	},
 	"keywords": [],
 	"author": "Evan Short < evan.short@gmail.com >",
