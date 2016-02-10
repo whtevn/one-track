@@ -15,9 +15,7 @@ export default class RouteManager {
           this.routes = router.routes.asImmutable();           // use its routes to seed a new RouteManager
         }                                                      
   }
-
                                                                
-
   GET()    { return this.new_route(GET,    ...arguments); }    // define RouteManager.GET
   POST()   { return this.new_route(POST,   ...arguments); }    // define RouteManager.POST
   PUT()    { return this.new_route(PUT,    ...arguments); }    // define RouteManager.PUT
@@ -32,7 +30,7 @@ export default class RouteManager {
     return new Promise(function(resolve, reject){              // always return a promise
       const entry  = retrieve_path(method, path, routes);      // find the path's executable function and data
       const params = paramify(path,
-                              entry.path.description,          // retrieve the parameters from the user's path
+                              entry.path.description,          // retrieve the parameters for the given path
                               entry.path.params);              // given the path description (regex) and params 
                                                                // found above
       const args   = Object.assign({}, body, params);
