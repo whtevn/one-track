@@ -3,46 +3,44 @@ import {
    POST,
    PUT,
    DELETE,
-   NO_SUCH_ROUTE,
-   objectify,
-   regexify,
-   routify,
-   paramify 
+   paramify,
+   retrieve_path,
+   add_route
  }   from './lib';
 
 export default class RouteManager {
-  constructor(opts){
-    this.routes = routify();
+  constructor(router=null){
+    if(router && router.routes &&
+        typeof router.routes.asImmutable === function) {       // if an appropriately shaped router is given
+          this.routes = router.routes.asImmutable();           // use its routes to seed a new RouteManager
+        }                                                      
   }
 
+                                                               
 
-  add_route(method, path, classname, func){
-    if(typeof func === 'string') func = classname[func];
-
-    const new_path = regexify(path);
-    this.routes = routify(this.routes, method, 
-                              {path: new_path, route: {classname, func}})
+  GET()    { return this.new_route(GET,    ...arguments); }    // define RouteManager.GET
+  POST()   { return this.new_route(POST,   ...arguments); }    // define RouteManager.POST
+  PUT()    { return this.new_route(PUT,    ...arguments); }    // define RouteManager.PUT
+  DELETE() { return this.new_route(DELETE, ...arguments); }    // define RouteManager.DELETE
+  
+  new_route(method, ...args) {                                
+    this.routes = add_route(this.routes, method, ...args);     // append a route to this instance's routes
+    return this;                                               // allow this method to be chained 
   }
 
-  GET()    { this.add_route(GET    , ...arguments); }
-  POST()   { this.add_route(POST   , ...arguments); }
-  PUT()    { this.add_route(PUT    , ...arguments); }
-  DELETE() { this.add_route(DELETE , ...arguments); }
+  find(method, path, body, headers, routes=this.routes){
+    return new Promise(function(resolve, reject){              // always return a promise
+      const entry  = retrieve_path(method, path, routes);      // find the path's executable function and data
+      const params = paramify(path,
+                              entry.path.description,          // retrieve the parameters from the user's path
+                              entry.path.params);              // given the path description (regex) and params 
+                                                               // found above
+      const args   = Object.assign({}, body, params);
+      resolve(entry.route.func.call(entry.route.classname,     // call the found route's function
+                                    args,                      // after binding it to the requested object
+                                    headers)                   // send the assembled args and headers as arguments
+             );
+    });                                                        // end return
+  }                                                            // end `find`
 
-  find(method, path, body){
-    const entry = this.routes
-                      .get(method)
-                      .filter(
-                        (val, test) => {
-                          return path.match(new RegExp(test))
-                        }
-                      ).first();
-
-    if(!entry) throw NO_SUCH_ROUTE
-
-    const params = paramify(path, entry.path.description, entry.path.params)
-
-    return entry.route.func.call(entry.route.classname, Object.assign({}, body, params));
-  }
-
-}
+}                                                              // end class 
