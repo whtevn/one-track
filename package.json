@@ -3,11 +3,11 @@
 	"repository": "https://github.com/whtevn/one-track.git",
 	"version": "0.0.6",
 	"description": "very simple router middleware",
-	"main": "index.js",
+	"main": "build/index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel -d lib src/*",
-    "prepublish": "npm build"
+    "build": "babel -d build *.js",
+    "prepublish": "npm run build"
 	},
 	"keywords": [],
 	"author": "Evan Short < evan.short@gmail.com >",
