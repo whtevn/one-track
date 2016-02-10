@@ -28,21 +28,22 @@ ex:
     Router.GET('/path/to/:id', UserSingleton, 'find');        //=> calls UserSingleton.find with `UserSingleton` as context
 
 
-Using with Koa2 
-===============
+Hello World with Koa2 
+=====================
 
-    import RouteManager    from 'one-track';
-    import RouteMiddleware from 'one-track/koa.middleware';
+    import Koa from 'koa';
+    import bodyParser from 'koa-bodyparser';
+    import RouteManager from 'one-track';
+    import RouteMiddleware from 'one-track-koa';
 
-    const Router = new RouteManager();
+    const app          = new Koa();
+    const Router       = new RouteManager();
 
-    import User from './src/user';
+    function hello({place}){
+      return "hello, "+place
+    }
 
-    UserSingleton = new User();
-
-    Router.POST('/path/to/login', app, UserSingleton.signon); 
-
-    Router.GET('/path/to/:id', UserSingleton, 'find');       
+    Router.GET('/hello/:place', app, hello);       
 
     app.use(bodyParser());
     app.use(RouteMiddleware(Router))
@@ -54,31 +55,39 @@ Using with Koa2
 More Examples 
 =============
 
-    const Koa = require('koa');
-    const bodyParser = require('koa-bodyparser');
+    /* Setup the Koa app */
+    import Koa from 'koa';
+    import bodyParser from 'koa-bodyparser';
+    const app          = new Koa();
 
-    import RouteManager from './lib/router';
-    import RouteMiddleware from './lib/router.koa.middleware';
-
+    /* One of many ways to get a batch of functions to call from routes */
     import User from './src/user/core.user';
     import * as User_Adapter from './src/user/lib.user';
-
     const UserInstance = new User({User_Adapter})
-    const app          = new Koa();
+
+    /* Set up one-track router and associated koa middleware*/
+    import RouteManager from 'one-track';
+    import RouteMiddleware from 'one-track-koa';
     const Router       = new RouteManager();
 
+    /* Assign routes to the router */
     Router
       .POST('/register', UserInstance, 'register')
       .POST('/login', UserInstance, 'login')
 
+    /* Create a new RouteManager from an old one */
     const RouterCont  = new RouteManager(Router)
-                          .GET('/user/:id', UserInstance, 'locate')
-                          .GET('/user/:id/test/:second', UserInstance, 'locate')
-                          .GET('/user/:id/test/:second/:third', UserInstance, 'locate')
+                              .GET('/user/:id', UserInstance, 'locate')
+                              .GET('/user/:id/test/:second', UserInstance, 'locate')
+                              .GET('/user/:id/test/:second/:third', UserInstance, 'locate')
 
+
+    /* bodyparser is required for POST bodies */
     app.use(bodyParser());
+
+    /* apply the router to koa using the middleware */
     app.use(RouteMiddleware(RouterCont))
 
+    /* listen and wait */
     app.listen(3000);
     console.log("app is listening");
-
