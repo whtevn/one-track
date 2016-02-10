@@ -3,6 +3,10 @@ Installation
 
     npm install one-track --save
 
+if intending to use with koa2
+
+    npm install one-track one-track-koa koa@next --save
+
 Usage 
 -----
 
