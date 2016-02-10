@@ -1,13 +1,13 @@
 {
 	"name": "one-track",
 	"repository": "https://github.com/whtevn/one-track.git",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "very simple router middleware",
 	"main": "build/index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel -d build *.js",
-    "prepublish": "npm run build"
+		"build": "babel -d build *.js",
+		"prepublish": "npm run build"
 	},
 	"keywords": [],
 	"author": "Evan Short < evan.short@gmail.com >",
@@ -19,6 +19,6 @@
 		"babel-cli": "^6.4.5",
 		"babel-core": "^6.4.5",
 		"babel-preset-es2015": "^6.3.13",
-    "babel-plugin-transform-async-to-generator": "^6.5.0"
+		"babel-plugin-transform-async-to-generator": "^6.5.0"
 	}
 }
