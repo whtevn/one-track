@@ -1,23 +1,26 @@
 {
-	"name": "one-track",
-	"repository": "https://github.com/whtevn/one-track.git",
-	"version": "0.0.11",
-	"description": "very simple router middleware",
-	"main": "build/index.js",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"build": "babel -d build *.js"
-	},
-	"keywords": [],
-	"author": "Evan Short < evan.short@gmail.com >",
-	"license": "MIT",
-	"dependencies": {
-		"immutable": "^3.7.6"
-	},
-	"devDependencies": {
-		"babel-cli": "^6.4.5",
-		"babel-core": "^6.4.5",
-		"babel-preset-es2015": "^6.3.13",
-		"babel-plugin-transform-async-to-generator": "^6.5.0"
-	}
+  "name": "one-track",
+  "repository": "https://github.com/whtevn/one-track.git",
+  "version": "0.0.11",
+  "description": "very simple router middleware",
+  "main": "build/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel -d build *.js"
+  },
+  "keywords": [],
+  "author": "Evan Short < evan.short@gmail.com >",
+  "license": "MIT",
+  "dependencies": {
+    "immutable": "^3.7.6"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-core": "^6.4.5",
+    "babel-plugin-transform-async-to-generator": "^6.5.0",
+    "babel-preset-es2015": "^6.3.13",
+    "koa": "^2.0.0-alpha.3",
+    "koa-bodyparser": "^3.0.0",
+    "one-track-koa": "0.0.3"
+  }
 }

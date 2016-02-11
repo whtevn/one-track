@@ -5,7 +5,8 @@ import {
    DELETE,
    paramify,
    retrieve_path,
-   add_route
+   add_route,
+   execute_middleware
  }   from './lib';
 
 export default class RouteManager {
@@ -25,7 +26,7 @@ export default class RouteManager {
     return this;                                               // allow this method to be chained 
   }
 
-  find(method, path, body, headers, routes=this.routes){
+  find(method, path, body, headers, ctx, routes=this.routes){
     return new Promise(function(resolve, reject){              // always return a promise
       const entry  = retrieve_path(method, path, routes);      // find the path's executable function and data
       const params = paramify(path,
@@ -33,10 +34,7 @@ export default class RouteManager {
                               entry.path.params);              // given the path description (regex) and params 
                                                                // found above
       const args   = Object.assign({}, body, params);
-      resolve(entry.route.func.call(entry.route.classname,     // call the found route's function
-                                    args,                      // after binding it to the requested object
-                                    headers)                   // send the assembled args and headers as arguments
-             );
+      resolve(execute_middleware(entry.middleware, args, headers, ctx));
     });                                                        // end return
   }                                                            // end `find`
 
