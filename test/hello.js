@@ -26,7 +26,6 @@
     Router.GET('/say/hello/:place', hello, say);       
     Router.GET('/say/goodbye', goodbye, say);       
 
-
     app.use(bodyParser());
     app.use(RouteMiddleware(Router))
 
