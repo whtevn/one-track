@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { List, Map } from 'immutable';
 const escapeStringRegexp = require('escape-string-regexp');
 
 export const INITIAL_ROUTES = Map({GET:Map({}), POST:Map({}), PUT:Map({}), DELETE:Map({})});
@@ -21,7 +21,7 @@ function regexify(path){
   const regex = new RegExp(/:([^\/]*)/,'g')
   return {
     params: (path.match(regex)||[]).map(x => x.replace(':', '')),
-    description: escapeStringRegexp(path).replace(regex, "([^\\/]*)")+"/?$"
+    description: "^"+escapeStringRegexp(path).replace(regex, "([^\\/]*)")+"/?$"
   }
 }
 
@@ -37,16 +37,13 @@ export function paramify(path, description, params){
 }
 
 
-export function add_route(routes, method, path, classname, func=''){
-  if(typeof func === 'string') func = classname[func];
-
-  const path_regex_and_description = regexify(path);
-  routes = routify(routes,
-                     method, 
-                    { path: path_regex_and_description,
-                      route: {classname, func}
-                    });
-  return routes
+export function add_route(routes, method, path, ...func_set){
+  return routify(routes,
+                 method, 
+                  { path: regexify(path),
+                    middleware: func_set
+                  }
+                );
 }
 
 export function retrieve_path(method, path, routes){
@@ -60,4 +57,25 @@ export function retrieve_path(method, path, routes){
     if(!entry) throw NO_SUCH_ROUTE;
     return entry;
 
+}
+
+export function execute_middleware(function_array, args, headers, ctx){
+  const func_list = new List(function_array);
+  if(func_list.isEmpty()) return args;
+  const func = func_list.first();
+  const remaining_functions = func_list.shift();
+  return run_fun(func, args, headers, ctx)
+          .then((result) => execute_middleware(remaining_functions, result, headers, ctx));
+     
+}
+
+function run_fun(func, args, headers, ctx){
+  return new Promise(function(resolve, reject){
+    if(typeof func === 'array'){
+       ctx = func[0];
+       if(typeof func[1] === 'string') func = func[0][func[1]];
+       if(typeof func[1] === 'function') func = func[1];
+    }
+    resolve(func.call(ctx, args, headers))
+  })
 }
