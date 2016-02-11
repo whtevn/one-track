@@ -5,7 +5,10 @@ Installation
 
 if intending to use with koa2
 
-    npm install one-track one-track-koa koa@next --save
+    npm install one-track one-track-koa koa@next koa-bodyparse@3 --save
+
+note that none of those are required to use this package, but they are 
+used in the demonstrations below
 
 Usage 
 -----
@@ -37,23 +40,39 @@ Hello World with Koa2
 
     import Koa from 'koa';
     import bodyParser from 'koa-bodyparser';
-    import RouteManager from 'one-track';
-    import RouteMiddleware from 'one-track-koa';
+    import RouteManager from '../index';
+    import RouteMiddleware from '../one-track-koa';
 
     const app          = new Koa();
     const Router       = new RouteManager();
 
     function hello({place}){
+      console.log("in hello");
       return "hello, "+place
     }
 
-    Router.GET('/hello/:place', app, hello);       
+    function goodbye(){
+      console.log("in goodbye");
+      return "goodbye"
+    }
+
+    function say(phrase){
+      console.log("in say");
+      return "say "+phrase;
+    }
+
+    Router.GET('/hello/:place', hello);            // => hello, {place}
+    Router.GET('/say/hello/:place', hello, say);   // => say hello, {place}      
+    Router.GET('/say/goodbye', goodbye, say);      // => say goodbye
+    Router.GET('/goodbye', goodbye);               // => goodbye
 
     app.use(bodyParser());
     app.use(RouteMiddleware(Router))
 
     app.listen(3000);
     console.log("app is listening");
+
+
 
 
 More Examples 

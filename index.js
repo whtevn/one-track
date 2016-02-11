@@ -34,7 +34,11 @@ export default class RouteManager {
                               entry.path.params);              // given the path description (regex) and params 
                                                                // found above
       const args   = Object.assign({}, body, params);
-      resolve(execute_middleware(entry.middleware, args, headers, ctx));
+
+      resolve(execute_middleware(entry.middleware,             // run the code associated with the route
+                                 args,                         // resolve the promise with whatever it returns
+                                 headers,
+                                 ctx));
     });                                                        // end return
   }                                                            // end `find`
 
