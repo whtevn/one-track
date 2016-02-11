@@ -7,6 +7,7 @@ exports.NO_SUCH_ROUTE = exports.DELETE = exports.PUT = exports.POST = exports.GE
 exports.paramify = paramify;
 exports.add_route = add_route;
 exports.retrieve_path = retrieve_path;
+exports.execute_middleware = execute_middleware;
 
 var _immutable = require('immutable');
 
@@ -34,7 +35,7 @@ function regexify(path) {
     params: (path.match(regex) || []).map(function (x) {
       return x.replace(':', '');
     }),
-    description: escapeStringRegexp(path).replace(regex, "([^\\/]*)") + "/?$"
+    description: "^" + escapeStringRegexp(path).replace(regex, "([^\\/]*)") + "/?$"
   };
 }
 
@@ -53,16 +54,14 @@ function paramify(path, description, params) {
   return objectify(params, vals.slice(1, vals.length));
 }
 
-function add_route(routes, method, path, classname) {
-  var func = arguments.length <= 4 || arguments[4] === undefined ? '' : arguments[4];
+function add_route(routes, method, path) {
+  for (var _len = arguments.length, func_set = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+    func_set[_key - 3] = arguments[_key];
+  }
 
-  if (typeof func === 'string') func = classname[func];
-
-  var path_regex_and_description = regexify(path);
-  routes = routify(routes, method, { path: path_regex_and_description,
-    route: { classname: classname, func: func }
+  return routify(routes, method, { path: regexify(path),
+    middleware: func_set
   });
-  return routes;
 }
 
 function retrieve_path(method, path, routes) {
@@ -71,4 +70,25 @@ function retrieve_path(method, path, routes) {
   }).first();
   if (!entry) throw NO_SUCH_ROUTE;
   return entry;
+}
+
+function execute_middleware(function_array, args, headers, ctx) {
+  var func_list = new _immutable.List(function_array);
+  if (func_list.isEmpty()) return args;
+  var func = func_list.first();
+  var remaining_functions = func_list.shift();
+  return run_fun(func, args, headers, ctx).then(function (result) {
+    return execute_middleware(remaining_functions, result, headers, ctx);
+  });
+}
+
+function run_fun(func, args, headers, ctx) {
+  return new Promise(function (resolve, reject) {
+    if (typeof func === 'array') {
+      ctx = func[0];
+      if (typeof func[1] === 'string') func = func[0][func[1]];
+      if (typeof func[1] === 'function') func = func[1];
+    }
+    resolve(func.call(ctx, args, headers));
+  });
 }

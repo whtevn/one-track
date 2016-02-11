@@ -57,8 +57,8 @@ var RouteManager = function () {
     }
   }, {
     key: 'find',
-    value: function find(method, path, body, headers) {
-      var routes = arguments.length <= 4 || arguments[4] === undefined ? this.routes : arguments[4];
+    value: function find(method, path, body, headers, ctx) {
+      var routes = arguments.length <= 5 || arguments[5] === undefined ? this.routes : arguments[5];
 
       return new Promise(function (resolve, reject) {
         // always return a promise
@@ -67,10 +67,10 @@ var RouteManager = function () {
         entry.path.params); // given the path description (regex) and params
         // found above
         var args = Object.assign({}, body, params);
-        resolve(entry.route.func.call(entry.route.classname, // call the found route's function
-        args, // after binding it to the requested object
-        headers) // send the assembled args and headers as arguments
-        );
+
+        resolve((0, _lib.execute_middleware)(entry.middleware, // run the code associated with the route
+        args, // resolve the promise with whatever it returns
+        headers, ctx));
       }); // end return
     } // end `find`
 
