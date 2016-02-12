@@ -8,6 +8,7 @@ export const POST   = 'POST'  ;
 export const PUT    = 'PUT'   ;
 export const DELETE = 'DELETE';
 export const NO_SUCH_ROUTE = { code: 404, msg: 'NO SUCH ROUTE' };
+export const BAD_ROUTER    = new Error("bad router given in generator");
 
 function objectify (keys, values) {
   let obj = {};
@@ -15,6 +16,13 @@ function objectify (keys, values) {
     obj[keys[index]] = values[index];
   }
   return obj;
+}
+
+export function duplicate(obj){
+  if(!obj.routes || !typeof obj.routes.asImmutable === 'function')
+     throw BAD_ROUTER
+
+  return obj.routes.asImmutable();
 }
 
 function regexify(path){

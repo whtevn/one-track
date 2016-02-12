@@ -6,12 +6,13 @@ import {
    paramify,
    retrieve_path,
    add_route,
-   execute_middleware
+   execute_middleware,
+   duplicate
  }   from './lib';
 
 export default class RouteManager {
   constructor(router=undefined){
-    if(router && typeof router.dup === "function") this.routes = router.dup();
+    if(router) this.routes = router.export_routes();
   }
                                                                
   GET()    { return this.new_route(GET,    ...arguments); }    // define RouteManager.GET
@@ -24,8 +25,8 @@ export default class RouteManager {
     return this;                                               // allow this method to be chained 
   }
 
-  dup(){
-    return this.routes.asImmutable();
+  export_routes(){
+    return duplicate(this);
   }
 
   find(method, path, body, headers, ctx, routes=this.routes){
