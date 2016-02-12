@@ -3,7 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.NO_SUCH_ROUTE = exports.DELETE = exports.PUT = exports.POST = exports.GET = exports.INITIAL_ROUTES = undefined;
+exports.BAD_ROUTER = exports.NO_SUCH_ROUTE = exports.DELETE = exports.PUT = exports.POST = exports.GET = exports.INITIAL_ROUTES = undefined;
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+exports.duplicate = duplicate;
 exports.paramify = paramify;
 exports.add_route = add_route;
 exports.retrieve_path = retrieve_path;
@@ -20,6 +24,7 @@ var POST = exports.POST = 'POST';
 var PUT = exports.PUT = 'PUT';
 var DELETE = exports.DELETE = 'DELETE';
 var NO_SUCH_ROUTE = exports.NO_SUCH_ROUTE = { code: 404, msg: 'NO SUCH ROUTE' };
+var BAD_ROUTER = exports.BAD_ROUTER = new Error("bad router given in generator");
 
 function objectify(keys, values) {
   var obj = {};
@@ -27,6 +32,12 @@ function objectify(keys, values) {
     obj[keys[index]] = values[index];
   }
   return obj;
+}
+
+function duplicate(obj) {
+  if (!obj.routes || !_typeof(obj.routes.asImmutable) === 'function') throw BAD_ROUTER;
+
+  return obj.routes.asImmutable();
 }
 
 function regexify(path) {

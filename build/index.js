@@ -12,13 +12,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var RouteManager = function () {
   function RouteManager() {
-    var router = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+    var router = arguments.length <= 0 || arguments[0] === undefined ? undefined : arguments[0];
 
     _classCallCheck(this, RouteManager);
 
-    if (router && router.routes && typeof router.routes.asImmutable === 'function') {
-      this.routes = router.routes.asImmutable(); // if an appropriately shaped router is given
-    } // use its routes to seed a new RouteManager
+    if (router) this.routes = router.export_routes();
   }
 
   _createClass(RouteManager, [{
@@ -54,6 +52,11 @@ var RouteManager = function () {
 
       this.routes = _lib.add_route.apply(undefined, [this.routes, method].concat(args)); // append a route to this instance's routes
       return this; // allow this method to be chained
+    }
+  }, {
+    key: 'export_routes',
+    value: function export_routes() {
+      return (0, _lib.duplicate)(this);
     }
   }, {
     key: 'find',
