@@ -24,10 +24,12 @@
 
     Router.GET('/hello/:place', hello);       
     Router.GET('/say/hello/:place', hello, say);       
-    Router.GET('/say/goodbye', goodbye, say);       
+
+    const R2 = new RouteManager(Router)
+    R2.GET('/say/goodbye', goodbye, say);       
 
     app.use(bodyParser());
-    app.use(RouteMiddleware(Router))
+    app.use(RouteMiddleware(R2))
 
     app.listen(3000);
     console.log("app is listening");

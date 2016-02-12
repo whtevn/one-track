@@ -10,10 +10,8 @@ import {
  }   from './lib';
 
 export default class RouteManager {
-  constructor(router=null){
-    if(router && router.routes && typeof router.routes.asImmutable === 'function') {       
-          this.routes = router.routes.asImmutable();           // if an appropriately shaped router is given
-        }                                                      // use its routes to seed a new RouteManager
+  constructor(router=undefined){
+    if(router && typeof router.dup === "function") this.routes = router.dup();
   }
                                                                
   GET()    { return this.new_route(GET,    ...arguments); }    // define RouteManager.GET
@@ -24,6 +22,10 @@ export default class RouteManager {
   new_route(method, ...args) {                                
     this.routes = add_route(this.routes, method, ...args);     // append a route to this instance's routes
     return this;                                               // allow this method to be chained 
+  }
+
+  dup(){
+    return this.routes.asImmutable();
   }
 
   find(method, path, body, headers, ctx, routes=this.routes){
