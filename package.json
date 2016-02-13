@@ -6,8 +6,7 @@
 	"main": "build/index.js",
 	"scripts": {
 		"build": "babel -d build *.js",
-		"test": "babel-node test/hello.js",
-		"prepublish": "npm run build; devup"
+		"test": "babel-node test/hello.js"
 	},
 	"keywords": [],
 	"author": "Evan Short < evan.short@gmail.com >",

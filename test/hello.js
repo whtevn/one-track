@@ -7,7 +7,7 @@
     const app          = new Koa();
     const Router       = new RouteManager();
 
-    function hello({place}){
+    function hello(place){
       console.log("in hello");
       return "hello, "+place
     }
@@ -22,11 +22,27 @@
       return "say "+phrase;
     }
 
-    Router.GET('/hello/:place', hello);       
-    Router.GET('/say/hello/:place', hello, say);       
+
+    const routed_hello = {args: (params) => params.place, func: hello};
+    Router.GET('/hello/:place', routed_hello);       
+    Router.GET('/say/hello/:place', routed_hello, say);       
 
     const R2 = new RouteManager(Router)
-    R2.GET('/say/goodbye', goodbye, say);       
+
+
+    /*
+    Send((params, body) => body.phrase).to(goodbye),
+    Send((params, body) => body.phrase).to([ctx, goodbye]),
+
+    const authentication_arguments = (params, body, headers, ctx) => [(params.user_id||headers.user_id), headers.Authenticate, params]
+    const validate_authentication  = (token, params) => check(token) && params
+    const check = (token) => true
+
+    const authenticate = Send(authentication_arguments).to(validate_authentication);
+    R2.POST('/say/goodbye', authenticate,
+                            goodbye,
+                            say);       
+    */
 
     app.use(bodyParser());
     app.use(RouteMiddleware(R2))
