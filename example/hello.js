@@ -1,15 +1,12 @@
 
     import Koa from 'koa';
     import bodyParser from 'koa-bodyparser';
-    import RouteManager from '../index';
+    import RouteManager, { Send } from '../index';
     import RouteMiddleware from '../one-track-koa';
-    import Binder from '../lib/function-bindery'; // TODO: this should not be a requirement here
 
     const app    = new Koa();
     const Router = new RouteManager();
 
-    // TODO: this  needs to be exportable from one-track
-    const Send   = Binder.send;
 
     /****** Imagine... that this is your app *******/
     function hello(place){

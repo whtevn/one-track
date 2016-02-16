@@ -7,7 +7,7 @@
   "scripts": {
     "build": "babel -d build *.js",
     "test": "mocha --compilers js:babel-core/register",
-    "ex": "babel-node ex/hello.js"
+    "ex": "babel-node example/hello.js"
   },
   "keywords": [],
   "author": "Evan Short < evan.short@gmail.com >",

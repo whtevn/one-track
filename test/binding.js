@@ -1,4 +1,4 @@
-import Binder from '../lib/function-bindery';
+import { run, Send } from '../lib/function-bindery';
 const chai = require('chai');
 const expect = chai.expect;
 const should = chai.should;
@@ -10,7 +10,7 @@ function hello(place){
 describe('running a function', () => {
   describe("by passing a function", () => {
     it("should successfully run the function", (done) => {
-      Binder.run(hello, 'world')
+      run(hello, 'world')
         .then((result) => {
           expect(result).to.equal('hello world');
         })
@@ -21,7 +21,7 @@ describe('running a function', () => {
   
   describe("by passing an array", () => {
     it("should successfully run the function", (done) => {
-      Binder.run([this, hello], 'world')
+      run([this, hello], 'world')
         .then((result) => {
           expect(result).to.equal('hello world');
         })
@@ -35,7 +35,7 @@ describe('running a function', () => {
         ctx = {say: 'goodbye '}
       })
       it("should successfully run the function with that context", (done) => {
-        Binder.run([ctx, hello], 'world')
+        run([ctx, hello], 'world')
           .then((result) => {
             expect(result).to.equal('goodbye world');
           })
@@ -53,10 +53,10 @@ describe("packing a function", ()=>{
   })
   describe("defining the argument munger", () => {
     it("should result in an object that has .to as a function", ()=>{
-      expect(typeof Binder.send(arg_mangler).to).to.equal('function');
+      expect(typeof Send(arg_mangler).to).to.equal('function');
     })
     describe("sending a function to its .to", () => {
-      let mangler = Binder.send(arg_mangler)
+      let mangler = Send(arg_mangler)
       it("should result in a function", ()=>{
         expect(typeof mangler.to(()=>{})).to.equal('function');
       });
@@ -70,7 +70,7 @@ describe("using a packed function", ()=>{
   let speak_to_world = (phrase) => phrase+", world";
   beforeEach(()=>{
     arg_mangler = (params) => [params.say]
-    packed_func = Binder.send(arg_mangler).to(speak_to_world);
+    packed_func = Send(arg_mangler).to(speak_to_world);
   })
 
   it("should send the right arguments", (done)=>{
@@ -81,7 +81,7 @@ describe("using a packed function", ()=>{
   })
 
   describe("sending to many arguments", (done)=>{
-    let ringer_func = Binder.send(()=>[1,2,3]).to((a,b,c)=>{
+    let ringer_func = Send(()=>[1,2,3]).to((a,b,c)=>{
       return a+b+c
     });;
     it("should use the args resulting from the pack", (done) => {

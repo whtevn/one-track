@@ -7,8 +7,8 @@ import {
    retrieve_path,
    add_route,
    execute_middleware,
-   duplicate
- }   from './lib';
+ }   from './lib/pathify';
+
 
 export default class RouteManager {
   constructor(router=undefined){
@@ -26,7 +26,7 @@ export default class RouteManager {
   }
 
   export_routes(){
-    return duplicate(this);
+    return duplicate(this.routes);
   }
 
   find(method, path, body, headers, ctx, routes=this.routes){
@@ -46,3 +46,8 @@ export default class RouteManager {
   }                                                 
 
 }                                                  
+export { Send } from './lib/function-bindery';
+
+function duplicate(obj){
+  return obj.asImmutable();
+}

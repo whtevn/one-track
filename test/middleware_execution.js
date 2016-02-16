@@ -2,10 +2,9 @@ const chai = require('chai');
 const expect   = chai.expect;
 import { 
    execute_middleware
- }   from '../lib';
+ }   from '../lib/pathify';
 
-import Binder from '../lib/function-bindery';
-const Send   = Binder.send;
+import { Send } from '../lib/function-bindery';
 
 function hello(place){
   return ((this&&this.say)||'hello ')+place
