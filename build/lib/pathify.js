@@ -15,6 +15,10 @@ exports.execute_middleware = execute_middleware;
 
 var _immutable = require('immutable');
 
+var _functionBindery = require('./function-bindery');
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 var escapeStringRegexp = require('escape-string-regexp');
 
 var INITIAL_ROUTES = exports.INITIAL_ROUTES = (0, _immutable.Map)({ GET: (0, _immutable.Map)({}), POST: (0, _immutable.Map)({}), PUT: (0, _immutable.Map)({}), DELETE: (0, _immutable.Map)({}) });
@@ -83,23 +87,18 @@ function retrieve_path(method, path, routes) {
   return entry;
 }
 
-function execute_middleware(function_array, args, headers, ctx) {
+function execute_middleware(function_array) {
   var func_list = new _immutable.List(function_array);
-  if (func_list.isEmpty()) return args;
+
+  for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+    args[_key2 - 1] = arguments[_key2];
+  }
+
+  if (func_list.isEmpty()) return args[0];
   var func = func_list.first();
   var remaining_functions = func_list.shift();
-  return run_fun(func, args, headers, ctx).then(function (result) {
-    return execute_middleware(remaining_functions, result, headers, ctx);
-  });
-}
-
-function run_fun(func, args, headers, ctx) {
-  return new Promise(function (resolve, reject) {
-    if (typeof func === 'array') {
-      ctx = func[0];
-      if (typeof func[1] === 'string') func = func[0][func[1]];
-      if (typeof func[1] === 'function') func = func[1];
-    }
-    resolve(func.call(ctx, args, headers));
+  return _functionBindery.run.apply(undefined, [func].concat(args)).then(function (result) {
+    if (!Array.isArray(result)) result = [result];
+    return execute_middleware.apply(undefined, [remaining_functions].concat(_toConsumableArray(result)));
   });
 }

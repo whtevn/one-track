@@ -5,7 +5,7 @@
   "description": "very simple router middleware",
   "main": "build/index.js",
   "scripts": {
-    "build": "babel -d build *.js",
+    "build": "babel -d build *.js lib/*.js",
     "test": "mocha --compilers js:babel-core/register",
     "ex": "babel-node example/hello.js"
   },
