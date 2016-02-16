@@ -1,4 +1,5 @@
 import { List, Map } from 'immutable';
+import Binder from './lib/function-bindery';
 const escapeStringRegexp = require('escape-string-regexp');
 
 export const INITIAL_ROUTES = Map({GET:Map({}), POST:Map({}), PUT:Map({}), DELETE:Map({})});
@@ -26,7 +27,7 @@ export function duplicate(obj){
 }
 
 function regexify(path){
-  const regex = new RegExp(/:([^\/]*)/,'g')
+  const regex = new RegExp(/:([^\/]*)/,'g');
   return {
     params: (path.match(regex)||[]).map(x => x.replace(':', '')),
     description: "^"+escapeStringRegexp(path).replace(regex, "([^\\/]*)")+"/?$"
@@ -67,23 +68,15 @@ export function retrieve_path(method, path, routes){
 
 }
 
-export function execute_middleware(function_array, args, headers, ctx){
+export function execute_middleware(function_array, ...args){
   const func_list = new List(function_array);
-  if(func_list.isEmpty()) return args;
+  if(func_list.isEmpty()) return args[0];
   const func = func_list.first();
   const remaining_functions = func_list.shift();
-  return run_fun(func, args, headers, ctx)
-          .then((result) => execute_middleware(remaining_functions, result, headers, ctx));
+  return Binder.run(func, ...args)
+          .then((result) => {
+            if(!Array.isArray(result)) result = [result];
+            return execute_middleware(remaining_functions, ...result)
+          });
      
-}
-
-function run_fun(func, args, headers, ctx){
-  return new Promise(function(resolve, reject){
-    if(typeof func === 'array'){
-       ctx = func[0];
-       if(typeof func[1] === 'string') func = func[0][func[1]];
-       if(typeof func[1] === 'function') func = func[1];
-    }
-    resolve(func.call(ctx, args, headers))
-  })
 }
