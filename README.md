@@ -1,11 +1,15 @@
 Installation
 ------------
 
-    npm install one-track --save
+```
+npm install one-track --save
+```
 
 if intending to use with koa2
 
-    npm install one-track one-track-koa koa@next koa-bodyparse@3 --save
+```
+npm install one-track one-track-koa koa@next koa-bodyparse@3 --save
+```
 
 note that none of those are required to use this package, but they are 
 used in the demonstrations below
@@ -13,45 +17,53 @@ used in the demonstrations below
 Usage with Koa2
 ---------------
 
-    import Koa from 'koa';
-    import bodyParser from 'koa-bodyparser';
-    import RouteManager from 'one-track';
-    import RouteMiddleware from 'one-track-koa';
+```js
+import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
+import RouteManager from 'one-track';
+import RouteMiddleware from 'one-track-koa';
 
-    import { retrieve_user } from './your-app';
+import { retrieve_user } from './your-app';
 
-    const app          = new Koa();
-    const Router       = new RouteManager();
+const app          = new Koa();
+const Router       = new RouteManager();
 
-    Router.GET('/user/:id', retrieve_user);
+Router.GET('/user/:id', retrieve_user);
 
-    app.use(bodyParser());
-    app.use(RouteMiddleware(Router))
+app.use(bodyParser());
+app.use(RouteMiddleware(Router))
+```
 
 The above code will create the routes described, and call the functions
 implied with the following argument signature 
 
-    (headers, params, body, app)
+```js
+(headers, params, body, app)
+```
 
 where `app` is the Koa app context. Router supports standard CRUD opperations
 
 for example:
 
-    Router.GET('/user/:id', retrieve_user);
-    Router.POST('/user', create_user);
-    Router.PUT('/user/:id', update_user);
-    Router.DELETE('/user/:id', delete_user);
+```js
+Router.GET('/user/:id', retrieve_user);
+Router.POST('/user', create_user);
+Router.PUT('/user/:id', update_user);
+Router.DELETE('/user/:id', delete_user);
+```
 
 Router Chaining 
 ---------------
 
 Routers can be created from other Routers without disturbing the original
 
-    const Router       = new RouteManager();
-    Router.GET('/user/:id', retrieve_user);
+```js
+const Router       = new RouteManager();
+Router.GET('/user/:id', retrieve_user);
 
-    Router_2 = new RouteManager(Router);
-    Router_2.Post('/user');
+Router_2 = new RouteManager(Router);
+Router_2.Post('/user');
+```
 
 In the above example, the Router object has 1 route (`GET '/user/:id'`), and the
 `Router_2` object has 2 (`GET '/user/:id'` and `POST '/user'`);
@@ -66,11 +78,15 @@ is used.
 
 If the function is a string, the context is searched for the function's name
 
-    Router.get('/user/:id', [user, 'find']); //=> user['find'].call(user, ...args)
+```js
+Router.get('/user/:id', [user, 'find']); //=> user['find'].call(user, ...args)
+```
 
 Otherwise the function is called with the context given
 
-    Router.get('/user/:id', [user, retrieve_user]); //=> retrieve_user.call(user, ...args)
+```js
+Router.get('/user/:id', [user, retrieve_user]); //=> retrieve_user.call(user, ...args)
+```
 
 Argument Translation 
 --------------------
@@ -78,19 +94,21 @@ Argument Translation
 Argument translators can be used to map the unweildy data from the request
 into something an environment-agnostic method can process
 
-    import Koa from 'koa';
-    import bodyParser from 'koa-bodyparser';
-    import RouteManager, { Send } from 'one-track';
-    import RouteMiddleware from 'one-track-koa';
+```js
+import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
+import RouteManager, { Send } from 'one-track';
+import RouteMiddleware from 'one-track-koa';
 
-    import { retrieve_user } from './your-app';
+import { retrieve_user } from './your-app';
 
-    // translate the arguments that come from the koa app
-    // into something that the retrieve_user method can understand
+// translate the arguments that come from the koa app
+// into something that the retrieve_user method can understand
 
-    const koa_retrieve_user = Send((headers, params, body, app) => [params.id]).to(retrieve_user);
+const koa_retrieve_user = Send((headers, params, body, app) => [params.id]).to(retrieve_user);
 
-    Router.GET('/user/:id', koa_retrieve_user);
+Router.GET('/user/:id', koa_retrieve_user);
+```
 
 This allows you to create functions that do not care about the environment that they 
 ultimately live in. This also allows functions to live in multiple contexts, and for
@@ -98,7 +116,9 @@ contexts to change, without affecting the business logic
 
 Argument translations also respond to the array notation given above
 
-    Send((headers, params, body, app) => [params.id]).to([User, retrieve_user]);
+```js
+Send((headers, params, body, app) => [params.id]).to([User, retrieve_user]);
+```
 
 General Usage 
 -------------
@@ -106,108 +126,117 @@ General Usage
 One-Track does not require a server to work. Any application which can
 receive events can be routed through this software.
 
-    import RouteManager, { Send, GET } from 'one-track';
-    const Router = new RouteManager();
+```js
+import RouteManager, { Send, GET } from 'one-track';
+const Router = new RouteManager();
 
-    Router.GET('/path/:id/other/:info', another_function);
+Router.GET('/path/:id/other/:info', another_function);
+```
 
 In this case, calling
 
-    Router.find(GET, '/path/some_id/other/text_to_send')
+```js
+Router.find(GET, '/path/some_id/other/text_to_send')
+```
 
 is basically equivalent to calling
 
-    (function(){
-      return new Promise(resolve, reject){
-        resolve(another_function.call(this, ...arguments));
-      }
-    })()
+```js
+(function(){
+  return new Promise(resolve, reject){
+    resolve(another_function.call(this, ...arguments));
+  }
+})()
+```
 
 
 Hello World with Koa2 
 =====================
 
-    import Koa from 'koa';
-    import bodyParser from 'koa-bodyparser';
-    import RouteManager from '../index';
-    import RouteMiddleware from '../one-track-koa';
+```js
+import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
+import RouteManager from '../index';
+import RouteMiddleware from '../one-track-koa';
 
-    const app          = new Koa();
-    const Router       = new RouteManager();
+const app          = new Koa();
+const Router       = new RouteManager();
 
-    function hello({place}){
-      console.log("in hello");
-      return "hello, "+place
-    }
+function hello({place}){
+  console.log("in hello");
+  return "hello, "+place
+}
 
-    function goodbye(){
-      console.log("in goodbye");
-      return "goodbye"
-    }
+function goodbye(){
+  console.log("in goodbye");
+  return "goodbye"
+}
 
-    function say(phrase){
-      console.log("in say");
-      return "say "+phrase;
-    }
+function say(phrase){
+  console.log("in say");
+  return "say "+phrase;
+}
 
-    Router.GET('/hello/:place', hello);            // => hello, {place}
-    Router.GET('/say/hello/:place', hello, say);   // => say hello, {place}      
-    Router.GET('/say/goodbye', goodbye, say);      // => say goodbye
-    Router.GET('/goodbye', goodbye);               // => goodbye
+Router.GET('/hello/:place', hello);            // => hello, {place}
+Router.GET('/say/hello/:place', hello, say);   // => say hello, {place}      
+Router.GET('/say/goodbye', goodbye, say);      // => say goodbye
+Router.GET('/goodbye', goodbye);               // => goodbye
 
-    app.use(bodyParser());
-    app.use(RouteMiddleware(Router))
+app.use(bodyParser());
+app.use(RouteMiddleware(Router))
 
-    app.listen(3000);
-    console.log("app is listening");
-
+app.listen(3000);
+console.log("app is listening");
+```
 
 More Examples 
 =============
 
-== Authentication Middleware: 2 ways
+==Authentication Middleware: 2 ways
 
 The first method uses argument translations 
 
-      // this is a simple signature method that should not be used in production 
-      const sign  = (user, secret=SECRET) => user+secret;
+  ```js
+  // this is a simple signature method that should not be used in production 
+  const sign  = (user, secret=SECRET) => user+secret;
 
-      // step 1: translate args to a method your validation function will understand.
-      //         in this case we are returning the user id and auth sent in the header
-      //         followed by the rest of the arguments in the appropriate order
-      function authentication_arguments(headers, ...args){
-        return [headers.user_id, headers.authorization, headers, ...args]
-      }
+  // step 1: translate args to a method your validation function will understand.
+  //         in this case we are returning the user id and auth sent in the header
+  //         followed by the rest of the arguments in the appropriate order
+  function authentication_arguments(headers, ...args){
+    return [headers.user_id, headers.authorization, headers, ...args]
+  }
 
-      // step 2: validate the user and return the remaining arguments
-      function validate_authentication(user, token, ...args){
-         if(sign(user, SECRET) !== token) throw {code:401, message:"Unauthorized"}
-         return args
-      }
+  // step 2: validate the user and return the remaining arguments
+  function validate_authentication(user, token, ...args){
+     if(sign(user, SECRET) !== token) throw {code:401, message:"Unauthorized"}
+     return args
+  }
 
-      // step 3: create the authentication middleware by sending the proper authentication
-      //         arguments to the authentication checker
-      const authenticate = Send(authentication_arguments).to(validate_authentication);
+  // step 3: create the authentication middleware by sending the proper authentication
+  //         arguments to the authentication checker
+  const authenticate = Send(authentication_arguments).to(validate_authentication);
+  ```
 
+very little of the above is actually required. The following function `simple_auth`
+and the constant `authenticate` created above are functionally equivalent.
+the advantage of the `authenticate` constant being that the algorithm is not 
+tied to the request-related arguments as they are sent
 
-The second just does the job
-
-    /***************************************/
-      // NOTE: very little of the above is actually required. The following function `simple_auth`
-      //       and the constant `authenticate` created above are functionally equivalent.
-      //       the advantage of the `authenticate` constant being that the algorithm is not 
-      //       tied to the request-related arguments as they are sent
-      function simple_auth(headers, ...args){
-        if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
-        return [headers, ...args]
-      }
-    /***************************************/
+  ```js
+  function simple_auth(headers, ...args){
+    if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
+    return [headers, ...args]
+  }
+  ```
 
 example usage of above middleware
 
-    // example request headers:
-    //   user_id      : APPLE
-    //   Authorization: APPLESAUCE
-    R2.POST('/goodbye/:say', authenticate,
-                            Send((headers, params)=>[params.say]).to(goodbye),
-                            say);       
+```js
+// example request headers:
+//   user_id      : APPLE
+//   Authorization: APPLESAUCE
+R2.POST('/goodbye/:say', authenticate,
+                        Send((headers, params)=>[params.say]).to(goodbye),
+                        say);       
+```
