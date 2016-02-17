@@ -73,7 +73,7 @@ var RouteManager = function () {
         var entry = (0, _pathify.retrieve_path)(method, path, routes);
         var params = (0, _pathify.paramify)(path, entry.path.description, entry.path.params);
 
-        resolve((0, _pathify.execute_middleware)(entry.middleware, headers, params, body, ctx));
+        resolve((0, _pathify.execute_middleware)(entry.middleware, _pathify.IS_ARRAY, headers, params, body, ctx));
       });
     }
   }]);

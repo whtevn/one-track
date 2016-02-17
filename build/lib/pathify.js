@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BAD_ROUTER = exports.NO_SUCH_ROUTE = exports.DELETE = exports.PUT = exports.POST = exports.GET = exports.INITIAL_ROUTES = undefined;
+exports.IS_ARRAY = exports.BAD_ROUTER = exports.NO_SUCH_ROUTE = exports.DELETE = exports.PUT = exports.POST = exports.GET = exports.INITIAL_ROUTES = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
@@ -29,6 +29,8 @@ var PUT = exports.PUT = 'PUT';
 var DELETE = exports.DELETE = 'DELETE';
 var NO_SUCH_ROUTE = exports.NO_SUCH_ROUTE = { code: 404, msg: 'NO SUCH ROUTE' };
 var BAD_ROUTER = exports.BAD_ROUTER = new Error("bad router given in generator");
+
+var IS_ARRAY = exports.IS_ARRAY = true;
 
 function objectify(keys, values) {
   var obj = {};
@@ -87,18 +89,22 @@ function retrieve_path(method, path, routes) {
   return entry;
 }
 
-function execute_middleware(function_array) {
+function execute_middleware(function_array, isArray) {
   var func_list = new _immutable.List(function_array);
 
-  for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-    args[_key2 - 1] = arguments[_key2];
+  for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+    args[_key2 - 2] = arguments[_key2];
   }
 
-  if (func_list.isEmpty()) return args[0];
+  if (func_list.isEmpty()) return isArray ? args : args[0];
   var func = func_list.first();
   var remaining_functions = func_list.shift();
   return _functionBindery.run.apply(undefined, [func].concat(args)).then(function (result) {
-    if (!Array.isArray(result)) result = [result];
-    return execute_middleware.apply(undefined, [remaining_functions].concat(_toConsumableArray(result)));
+    var result_is_array = Array.isArray(result) ? IS_ARRAY : false;
+    if (result_is_array === IS_ARRAY) {
+      return execute_middleware.apply(undefined, [remaining_functions, result_is_array].concat(_toConsumableArray(result)));
+    } else {
+      return execute_middleware(remaining_functions, result_is_array, result);
+    }
   });
 }
