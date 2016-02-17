@@ -1,7 +1,7 @@
 {
 	"name": "one-track",
 	"repository": "https://github.com/whtevn/one-track.git",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "very simple router middleware",
 	"main": "build/index.js",
 	"scripts": {
