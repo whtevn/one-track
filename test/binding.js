@@ -1,4 +1,4 @@
-import { run, Send } from '../lib/function-bindery';
+import { Send } from '../lib/function-bindery';
 const chai = require('chai');
 const expect = chai.expect;
 const should = chai.should;
@@ -7,44 +7,6 @@ function hello(place){
   return ((this&&this.say)||'hello ')+place
 };
 
-describe('running a function', () => {
-  describe("by passing a function", () => {
-    it("should successfully run the function", (done) => {
-      run(hello, 'world')
-        .then((result) => {
-          expect(result).to.equal('hello world');
-        })
-        .then(done)
-        .catch(done)
-    })
-  })
-  
-  describe("by passing an array", () => {
-    it("should successfully run the function", (done) => {
-      run([this, hello], 'world')
-        .then((result) => {
-          expect(result).to.equal('hello world');
-        })
-        .then(done)
-        .catch(done)
-    })
-
-    describe("with a specific context", () => {
-      let ctx;
-      beforeEach(()=>{
-        ctx = {say: 'goodbye '}
-      })
-      it("should successfully run the function with that context", (done) => {
-        run([ctx, hello], 'world')
-          .then((result) => {
-            expect(result).to.equal('goodbye world');
-          })
-          .then(done)
-          .catch(done)
-      })
-    })
-  })
-});
 
 describe("packing a function", ()=>{
   let arg_mangler;
@@ -75,8 +37,10 @@ describe("using a packed function", ()=>{
 
   it("should send the right arguments", (done)=>{
     packed_func({say: 'hello'})
-      .then((result) => expect(result).to.equal("hello, world"))
-      .then(()=>done())
+      .then((result) => {
+        expect(result).to.equal("hello, world")
+      })
+      .then(done)
       .catch(done)
   })
 
@@ -86,8 +50,10 @@ describe("using a packed function", ()=>{
     });;
     it("should use the args resulting from the pack", (done) => {
       ringer_func(5, 6, 7)
-        .then((result) => expect(result).to.equal(6))
-        .then(()=>done())
+        .then((result) =>{
+           expect(result).to.equal(6)
+        })
+        .then(done)
         .catch(done)
     })
   })

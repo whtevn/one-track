@@ -3,14 +3,12 @@ import {
    POST,
    PUT,
    DELETE,
-   paramify,
-   retrieve_path,
    add_route,
+   duplicate
  }   from './lib/pathify';
 
 import {
    IS_ARRAY,
-   execute_middleware,
    find_and_run
 } from './lib/function-bindery';
 
@@ -41,8 +39,3 @@ export default class RouteManager {
   }
 
 } 
-
-
-function duplicate(obj){
-  return obj.asImmutable();
-}
