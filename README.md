@@ -133,7 +133,7 @@ import RouteMiddleware from '../one-track-koa';
 const app          = new Koa();
 const Router       = new RouteManager();
 
-function hello({place}){
+function hello(place){
 console.log("in hello");
 return "hello, "+place
 }
