@@ -133,7 +133,7 @@ contexts to change, without affecting the business logic</p>
 <span class="pl-k">const</span> <span class="pl-c1">app</span>          <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Koa</span>();
 <span class="pl-k">const</span> <span class="pl-c1">Router</span>       <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">RouteManager</span>();
 
-<span class="pl-k">function</span> <span class="pl-en">hello</span>({<span class="pl-smi">place</span>}){
+<span class="pl-k">function</span> <span class="pl-en">hello</span>(<span class="pl-smi">place</span>){
 <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in hello<span class="pl-pds">"</span></span>);
 <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>hello, <span class="pl-pds">"</span></span><span class="pl-k">+</span>place
 }
