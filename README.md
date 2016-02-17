@@ -227,7 +227,7 @@ Router.GET('/path/:id/other/:info', another_function);
 In this case, calling
 
 ```js
-Router.find(GET, '/path/some_id/other/text_to_send')
+Router.find(GET, '/path/some_id/other/text_to_send', arg1, arg2)
 ```
 
 is basically equivalent to calling
@@ -238,4 +238,25 @@ return new Promise(resolve, reject){
   resolve(another_function.call(this, ...arguments));
 }
 })()
+```
+
+where `arg_1` and `arg_2` would be passed into `another_function`, since
+they are being passed in through the final arguments send in with `Router.find`.
+So, the koa middleware really ends up being as simple as setting the body of 
+the response to the result of the request path's function, with the relevant 
+info of the body, headers, and Koa context passed in as arguments
+
+### one-track-koa middleware
+
+```js
+const middleware = (Router) => async (ctx, next) => {
+  ctx.body = await Router
+                    .find(ctx.method, ctx.path, ctx.request.body, ctx.headers, ctx)
+                    .catch((err) => {
+                      console.log(err.stack||err);
+                      ctx.status = err.code||ctx.status;
+                      return err;
+                    });
+}
+export default middleware
 ```
