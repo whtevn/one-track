@@ -1,28 +1,28 @@
 {
-  "name": "one-track",
-  "repository": "https://github.com/whtevn/one-track.git",
-  "version": "0.2.2",
-  "description": "very simple router middleware",
-  "main": "build/index.js",
-  "scripts": {
-    "build": "babel -d build *.js lib/*.js",
-    "test": "mocha --compilers js:babel-core/register",
-    "ex": "babel-node example/hello.js"
-  },
-  "keywords": [],
-  "author": "Evan Short < evan.short@gmail.com >",
-  "license": "MIT",
-  "dependencies": {
-    "immutable": "^3.7.6"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.4.5",
-    "babel-core": "^6.4.5",
-    "babel-plugin-transform-async-to-generator": "^6.5.0",
-    "babel-preset-es2015": "^6.5.0",
-    "babel-register": "^6.5.2",
-    "chai": "^3.5.0",
-    "koa": "^2.0.0-alpha.3",
-    "koa-bodyparser": "^3.0.0"
-  }
+	"name": "one-track",
+	"repository": "https://github.com/whtevn/one-track.git",
+	"version": "0.3.0",
+	"description": "very simple router middleware",
+	"main": "build/index.js",
+	"scripts": {
+		"build": "babel -d build *.js lib/*.js",
+		"test": "mocha --compilers js:babel-core/register",
+		"ex": "babel-node example/hello.js"
+	},
+	"keywords": [],
+	"author": "Evan Short < evan.short@gmail.com >",
+	"license": "MIT",
+	"dependencies": {
+		"immutable": "^3.7.6"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.4.5",
+		"babel-core": "^6.4.5",
+		"babel-plugin-transform-async-to-generator": "^6.5.0",
+		"babel-preset-es2015": "^6.5.0",
+		"babel-register": "^6.5.2",
+		"chai": "^3.5.0",
+		"koa": "^2.0.0-alpha.3",
+		"koa-bodyparser": "^3.0.0"
+	}
 }
