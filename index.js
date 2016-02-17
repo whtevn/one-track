@@ -3,12 +3,14 @@ import {
    POST,
    PUT,
    DELETE,
+   IS_ARRAY,
    paramify,
    retrieve_path,
    add_route,
    execute_middleware,
  }   from './lib/pathify';
 
+export { Send } from './lib/function-bindery';
 
 export default class RouteManager {
   constructor(router=undefined){
@@ -38,15 +40,15 @@ export default class RouteManager {
                                                         
 
       resolve(execute_middleware(entry.middleware,     
+                                 IS_ARRAY,
                                  headers,             
                                  params,
                                  body,
                                  ctx));
-    });                                              
-  }                                                 
+    });
+  }
+} 
 
-}                                                  
-export { Send } from './lib/function-bindery';
 
 function duplicate(obj){
   return obj.asImmutable();

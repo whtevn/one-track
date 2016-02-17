@@ -18,7 +18,7 @@
     }
 
     function say(phrase){
-      return "say "+phrase;
+      return ["say ", phrase];
     }
     /********** end of your imaginary app*********/
 
@@ -27,10 +27,10 @@
       // this is a simple signature method that should not be used in production 
       const sign  = (user, secret=SECRET) => user+secret;
 
-      // step 1: translate args to a method your validation function will understand
+      // step 1: translate args to a method your validation function will understand.
+      //         in this case we are returning the user id and auth sent in the header
+      //         followed by the rest of the arguments in the appropriate order
       function authentication_arguments(headers, ...args){
-        // in this case we are returning the user id and auth sent in the header
-        // followed by the rest of the arguments in the appropriate order
         return [headers.user_id, headers.authorization, headers, ...args]
       }
 
@@ -88,3 +88,7 @@
 
     app.listen(3000);
     console.log("app is listening");
+
+
+
+
