@@ -1,7 +1,6 @@
 import { Send } from '../lib/function-bindery';
 const chai = require('chai');
 const expect = chai.expect;
-const should = chai.should;
 
 function hello(place){
   return ((this&&this.say)||'hello ')+place
