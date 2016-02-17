@@ -62,7 +62,7 @@ const Router       = new RouteManager();
 Router.GET('/user/:id', retrieve_user);
 
 Router_2 = new RouteManager(Router);
-Router_2.Post('/user');
+Router_2.Post('/user', create_user);
 ```
 
 In the above example, the Router object has 1 route (`GET '/user/:id'`), and the
@@ -120,6 +120,96 @@ Argument translations also respond to the array notation given above
 Send((headers, params, body, app) => [params.id]).to([User, retrieve_user]);
 ```
 
+
+Hello World with Koa2 
+=====================
+
+```js
+import Koa from 'koa';
+import bodyParser from 'koa-bodyparser';
+import RouteManager from '../index';
+import RouteMiddleware from '../one-track-koa';
+
+const app          = new Koa();
+const Router       = new RouteManager();
+
+function hello({place}){
+console.log("in hello");
+return "hello, "+place
+}
+
+function goodbye(){
+console.log("in goodbye");
+return "goodbye"
+}
+
+function say(phrase){
+console.log("in say");
+return "say "+phrase;
+}
+
+Router.GET('/hello/:place', hello);            // => hello, {place}
+Router.GET('/say/hello/:place', hello, say);   // => say hello, {place}      
+Router.GET('/say/goodbye', goodbye, say);      // => say goodbye
+Router.GET('/goodbye', goodbye);               // => goodbye
+
+app.use(bodyParser());
+app.use(RouteMiddleware(Router))
+
+app.listen(3000);
+console.log("app is listening");
+```
+
+Authentication Middleware Example 
+=================================
+
+The first method uses argument translations 
+
+```js
+// this is a simple signature method that should not be used in production 
+const sign  = (user, secret=SECRET) => user+secret;
+
+// step 1: translate args to a method your validation function will understand.
+//         in this case we are returning the user id and auth sent in the header
+//         followed by the rest of the arguments in the appropriate order
+function authentication_arguments(headers, ...args){
+  return [headers.user_id, headers.authorization, headers, ...args]
+}
+
+// step 2: validate the user and return the remaining arguments
+function validate_authentication(user, token, ...args){
+   if(sign(user, SECRET) !== token) throw {code:401, message:"Unauthorized"}
+   return args
+}
+
+// step 3: create the authentication middleware by sending the proper authentication
+//         arguments to the authentication checker
+const authenticate = Send(authentication_arguments).to(validate_authentication);
+```
+
+very little of the above is actually required. The following function `simple_auth`
+and the constant `authenticate` created above are functionally equivalent.
+the advantage of the `authenticate` constant being that the algorithm is not 
+tied to the request-related arguments as they are sent
+
+```js
+function simple_auth(headers, ...args){
+  if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
+  return [headers, ...args]
+}
+```
+
+example usage of above middleware
+
+```js
+// example request headers:
+//   user_id      : APPLE
+//   Authorization: APPLESAUCE
+R2.POST('/goodbye/:say', authenticate,
+                      Send((headers, params)=>[params.say]).to(goodbye),
+                      say);       
+```
+
 General Usage 
 -------------
 
@@ -143,100 +233,8 @@ is basically equivalent to calling
 
 ```js
 (function(){
-  return new Promise(resolve, reject){
-    resolve(another_function.call(this, ...arguments));
-  }
+return new Promise(resolve, reject){
+  resolve(another_function.call(this, ...arguments));
+}
 })()
-```
-
-
-Hello World with Koa2 
-=====================
-
-```js
-import Koa from 'koa';
-import bodyParser from 'koa-bodyparser';
-import RouteManager from '../index';
-import RouteMiddleware from '../one-track-koa';
-
-const app          = new Koa();
-const Router       = new RouteManager();
-
-function hello({place}){
-  console.log("in hello");
-  return "hello, "+place
-}
-
-function goodbye(){
-  console.log("in goodbye");
-  return "goodbye"
-}
-
-function say(phrase){
-  console.log("in say");
-  return "say "+phrase;
-}
-
-Router.GET('/hello/:place', hello);            // => hello, {place}
-Router.GET('/say/hello/:place', hello, say);   // => say hello, {place}      
-Router.GET('/say/goodbye', goodbye, say);      // => say goodbye
-Router.GET('/goodbye', goodbye);               // => goodbye
-
-app.use(bodyParser());
-app.use(RouteMiddleware(Router))
-
-app.listen(3000);
-console.log("app is listening");
-```
-
-More Examples 
-=============
-
-==Authentication Middleware: 2 ways
-
-The first method uses argument translations 
-
-  ```js
-  // this is a simple signature method that should not be used in production 
-  const sign  = (user, secret=SECRET) => user+secret;
-
-  // step 1: translate args to a method your validation function will understand.
-  //         in this case we are returning the user id and auth sent in the header
-  //         followed by the rest of the arguments in the appropriate order
-  function authentication_arguments(headers, ...args){
-    return [headers.user_id, headers.authorization, headers, ...args]
-  }
-
-  // step 2: validate the user and return the remaining arguments
-  function validate_authentication(user, token, ...args){
-     if(sign(user, SECRET) !== token) throw {code:401, message:"Unauthorized"}
-     return args
-  }
-
-  // step 3: create the authentication middleware by sending the proper authentication
-  //         arguments to the authentication checker
-  const authenticate = Send(authentication_arguments).to(validate_authentication);
-  ```
-
-very little of the above is actually required. The following function `simple_auth`
-and the constant `authenticate` created above are functionally equivalent.
-the advantage of the `authenticate` constant being that the algorithm is not 
-tied to the request-related arguments as they are sent
-
-  ```js
-  function simple_auth(headers, ...args){
-    if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
-    return [headers, ...args]
-  }
-  ```
-
-example usage of above middleware
-
-```js
-// example request headers:
-//   user_id      : APPLE
-//   Authorization: APPLESAUCE
-R2.POST('/goodbye/:say', authenticate,
-                        Send((headers, params)=>[params.say]).to(goodbye),
-                        say);       
 ```
