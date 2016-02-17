@@ -11,6 +11,7 @@ import {
  }   from './lib/pathify';
 
 export { Send } from './lib/function-bindery';
+export { GET, POST, PUT, DELETE, IS_ARRAY }  ;
 
 export default class RouteManager {
   constructor(router=undefined){
