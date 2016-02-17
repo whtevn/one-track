@@ -33,7 +33,7 @@ function Send(arg_map) {
           return resolve(arg_map.apply(undefined, _arguments));
         });
         return map_resolution.then(function (result) {
-          return func.apply(undefined, _toConsumableArray(result));
+          return run.apply(undefined, [func].concat(_toConsumableArray(result)));
         });
       };
     }

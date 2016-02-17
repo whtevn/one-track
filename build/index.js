@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Send = undefined;
+exports.IS_ARRAY = exports.DELETE = exports.PUT = exports.POST = exports.GET = exports.Send = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -19,6 +19,12 @@ Object.defineProperty(exports, 'Send', {
 var _pathify = require('./lib/pathify');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+exports.GET = _pathify.GET;
+exports.POST = _pathify.POST;
+exports.PUT = _pathify.PUT;
+exports.DELETE = _pathify.DELETE;
+exports.IS_ARRAY = _pathify.IS_ARRAY;
 
 var RouteManager = function () {
   function RouteManager() {
