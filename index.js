@@ -3,12 +3,16 @@ import {
    POST,
    PUT,
    DELETE,
-   IS_ARRAY,
    paramify,
    retrieve_path,
    add_route,
-   execute_middleware,
  }   from './lib/pathify';
+
+import {
+   IS_ARRAY,
+   execute_middleware,
+   find_and_run
+} from './lib/function-bindery';
 
 export { Send } from './lib/function-bindery';
 export { GET, POST, PUT, DELETE, IS_ARRAY }  ;
@@ -28,26 +32,14 @@ export default class RouteManager {
     return this;                                          
   }
 
+  find(method, path, ...args){
+    return find_and_run(this.routes, method, path, ...args);
+  }
+
   export_routes(){
     return duplicate(this.routes);
   }
 
-  find(method, path, body, headers, ctx, routes=this.routes){
-    return new Promise(function(resolve, reject){        
-      const entry  = retrieve_path(method, path, routes);  
-      const params = paramify(path,
-                              entry.path.description,     
-                              entry.path.params);        
-                                                        
-
-      resolve(execute_middleware(entry.middleware,     
-                                 IS_ARRAY,
-                                 headers,             
-                                 params,
-                                 body,
-                                 ctx));
-    });
-  }
 } 
 
 

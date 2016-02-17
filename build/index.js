@@ -24,7 +24,7 @@ exports.GET = _pathify.GET;
 exports.POST = _pathify.POST;
 exports.PUT = _pathify.PUT;
 exports.DELETE = _pathify.DELETE;
-exports.IS_ARRAY = _pathify.IS_ARRAY;
+exports.IS_ARRAY = _functionBindery.IS_ARRAY;
 
 var RouteManager = function () {
   function RouteManager() {
@@ -66,21 +66,18 @@ var RouteManager = function () {
       return this;
     }
   }, {
+    key: 'find',
+    value: function find(method, path) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
+      }
+
+      return _functionBindery.find_and_run.apply(undefined, [this.routes, method, path].concat(args));
+    }
+  }, {
     key: 'export_routes',
     value: function export_routes() {
       return duplicate(this.routes);
-    }
-  }, {
-    key: 'find',
-    value: function find(method, path, body, headers, ctx) {
-      var routes = arguments.length <= 5 || arguments[5] === undefined ? this.routes : arguments[5];
-
-      return new Promise(function (resolve, reject) {
-        var entry = (0, _pathify.retrieve_path)(method, path, routes);
-        var params = (0, _pathify.paramify)(path, entry.path.description, entry.path.params);
-
-        resolve((0, _pathify.execute_middleware)(entry.middleware, _pathify.IS_ARRAY, headers, params, body, ctx));
-      });
     }
   }]);
 

@@ -38,7 +38,7 @@ The above code will create the routes described, and call the functions
 implied with the following argument signature 
 
 ```js
-(headers, params, body, app)
+(params, headers, body, app)
 ```
 
 where `app` is the Koa app context. Router supports standard CRUD opperations
@@ -105,7 +105,7 @@ import { retrieve_user } from './your-app';
 // translate the arguments that come from the koa app
 // into something that the retrieve_user method can understand
 
-const koa_retrieve_user = Send((headers, params, body, app) => [params.id]).to(retrieve_user);
+const koa_retrieve_user = Send((params, headers, body, app) => [params.id]).to(retrieve_user);
 
 Router.GET('/user/:id', koa_retrieve_user);
 ```
@@ -117,7 +117,7 @@ contexts to change, without affecting the business logic
 Argument translations also respond to the array notation given above
 
 ```js
-Send((headers, params, body, app) => [params.id]).to([User, retrieve_user]);
+Send((params, headers, body, app) => [params.id]).to([User, retrieve_user]);
 ```
 
 
@@ -170,9 +170,9 @@ process of authentication
 ### Basic signature-checking authentication middleware  
 
 ```js
-function simple_auth(headers, ...args){
+function simple_auth(params, headers, ...args){
   if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
-  return [headers, ...args]
+  return [params, headers, ...args]
 }
 ```
 
@@ -185,8 +185,8 @@ const sign  = (user, secret=SECRET) => user+secret;
 // step 1: translate args to a method your validation function will understand.
 //         in this case we are returning the user id and auth sent in the header
 //         followed by the rest of the arguments in the appropriate order
-function authentication_arguments(headers, ...args){
-  return [headers.user_id, headers.authorization, headers, ...args]
+function authentication_arguments(params, headers, ...args){
+  return [headers.user_id, headers.authorization, params, headers, ...args]
 }
 
 // step 2: validate the user and return the remaining arguments
@@ -207,7 +207,7 @@ const authenticate = Send(authentication_arguments).to(validate_authentication);
 //   user_id      : APPLE
 //   Authorization: APPLESAUCE
 R2.POST('/goodbye/:say', authenticate,
-                      Send((headers, params)=>[params.say]).to(goodbye),
+                      Send((params)=>[params.say]).to(goodbye),
                       say);       
 ```
 
@@ -247,6 +247,14 @@ the response to the result of the request path's function, with the relevant
 info of the body, headers, and Koa context passed in as arguments
 
 ### one-track-koa middleware
+
+The default one-track-koa middleware is as follows. However, only the first 
+two arguments sent to `.find()` are required. The remaining arguments indicate
+the arguments that will be sent to the function indicated by `.find()`.
+
+In other words, altering this middleware to send different information to your
+application is as trivial as adding, removing, or changing arguments after the
+reference to `ctx.path`
 
 ```js
 const middleware = (Router) => async (ctx, next) => {

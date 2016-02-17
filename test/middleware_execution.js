@@ -2,7 +2,7 @@ const chai = require('chai');
 const expect   = chai.expect;
 import { 
    execute_middleware
- }   from '../lib/pathify';
+ }   from '../lib/function-bindery';
 
 import { Send } from '../lib/function-bindery';
 

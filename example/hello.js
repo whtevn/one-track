@@ -2,7 +2,7 @@
     import Koa from 'koa';
     import bodyParser from 'koa-bodyparser';
     import RouteManager, { Send } from '../index';
-    import RouteMiddleware from '../one-track-koa';
+    import RouteMiddleware from '../one-track-koa/index';
 
     const app    = new Koa();
     const Router = new RouteManager();
@@ -30,8 +30,8 @@
       // step 1: translate args to a method your validation function will understand.
       //         in this case we are returning the user id and auth sent in the header
       //         followed by the rest of the arguments in the appropriate order
-      function authentication_arguments(headers, ...args){
-        return [headers.user_id, headers.authorization, headers, ...args]
+      function authentication_arguments(params, headers, ...args){
+        return [headers.user_id, headers.authorization, params, headers, ...args]
       }
 
       // step 2: validate the user and return the remaining arguments
@@ -50,9 +50,9 @@
       //       and the constant `authenticate` created above are functionally equivalent.
       //       the advantage of the `authenticate` constant being that the algorithm is not 
       //       tied to the request-related arguments as they are sent
-      function simple_auth(headers, ...args){
+      function simple_auth(params, headers, ...args){
         if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
-        return [headers, ...args]
+        return [params, headers, ...args]
       }
     /***************************************/
 
@@ -61,7 +61,7 @@
     const SECRET = 'SAUCE'
 
 
-    const hello_params = (headers, params) => [params.place];
+    const hello_params = (params) => [params.place];
     const routed_hello = Send(hello_params).to(hello);
 
     Router.GET('/hello/:place', routed_hello);       
@@ -73,7 +73,7 @@
     //   user_id      : APPLE
     //   Authorization: APPLESAUCE
     R2.POST('/goodbye/:say', authenticate,
-                            Send((headers, params)=>[params.say]).to(goodbye),
+                            Send((params)=>[params.say]).to(goodbye),
                             say);       
 
     // example request headers:
