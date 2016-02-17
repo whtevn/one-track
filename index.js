@@ -3,46 +3,53 @@ import {
    POST,
    PUT,
    DELETE,
+   IS_ARRAY,
    paramify,
    retrieve_path,
    add_route,
    execute_middleware,
-   duplicate
- }   from './lib';
+ }   from './lib/pathify';
+
+export { Send } from './lib/function-bindery';
 
 export default class RouteManager {
   constructor(router=undefined){
     if(router) this.routes = router.export_routes();
   }
                                                                
-  GET()    { return this.new_route(GET,    ...arguments); }    // define RouteManager.GET
-  POST()   { return this.new_route(POST,   ...arguments); }    // define RouteManager.POST
-  PUT()    { return this.new_route(PUT,    ...arguments); }    // define RouteManager.PUT
-  DELETE() { return this.new_route(DELETE, ...arguments); }    // define RouteManager.DELETE
+  GET()    { return this.new_route(GET,    ...arguments); }   
+  POST()   { return this.new_route(POST,   ...arguments); }    
+  PUT()    { return this.new_route(PUT,    ...arguments); }  
+  DELETE() { return this.new_route(DELETE, ...arguments); } 
   
   new_route(method, ...args) {                                
-    this.routes = add_route(this.routes, method, ...args);     // append a route to this instance's routes
-    return this;                                               // allow this method to be chained 
+    this.routes = add_route(this.routes, method, ...args); 
+    return this;                                          
   }
 
   export_routes(){
-    return duplicate(this);
+    return duplicate(this.routes);
   }
 
   find(method, path, body, headers, ctx, routes=this.routes){
-    return new Promise(function(resolve, reject){              // always return a promise
-      const entry  = retrieve_path(method, path, routes);      // find the path's executable function and data
+    return new Promise(function(resolve, reject){        
+      const entry  = retrieve_path(method, path, routes);  
       const params = paramify(path,
-                              entry.path.description,          // retrieve the parameters for the given path
-                              entry.path.params);              // given the path description (regex) and params 
-                                                               // found above
-      const args   = Object.assign({}, body, params);
+                              entry.path.description,     
+                              entry.path.params);        
+                                                        
 
-      resolve(execute_middleware(entry.middleware,             // run the code associated with the route
-                                 args,                         // resolve the promise with whatever it returns
-                                 headers,
+      resolve(execute_middleware(entry.middleware,     
+                                 IS_ARRAY,
+                                 headers,             
+                                 params,
+                                 body,
                                  ctx));
-    });                                                        // end return
-  }                                                            // end `find`
+    });
+  }
+} 
 
-}                                                              // end class 
+
+function duplicate(obj){
+  return obj.asImmutable();
+}
