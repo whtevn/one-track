@@ -36,49 +36,45 @@ used in the demonstrations below</p>
 <h2>
 <a id="usage-with-koa2" class="anchor" href="#usage-with-koa2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage with Koa2</h2>
 
-<pre><code>import Koa from 'koa';
-import bodyParser from 'koa-bodyparser';
-import RouteManager from 'one-track';
-import RouteMiddleware from 'one-track-koa';
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> <span class="pl-smi">Koa</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>koa<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">bodyParser</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>koa-bodyparser<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">RouteManager</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>one-track<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">RouteMiddleware</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>one-track-koa<span class="pl-pds">'</span></span>;
 
-import { retrieve_user } from './your-app';
+<span class="pl-k">import</span> { <span class="pl-smi">retrieve_user</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>./your-app<span class="pl-pds">'</span></span>;
 
-const app          = new Koa();
-const Router       = new RouteManager();
+<span class="pl-k">const</span> <span class="pl-c1">app</span>          <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Koa</span>();
+<span class="pl-k">const</span> <span class="pl-c1">Router</span>       <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">RouteManager</span>();
 
-Router.GET('/user/:id', retrieve_user);
+<span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/:id<span class="pl-pds">'</span></span>, retrieve_user);
 
-app.use(bodyParser());
-app.use(RouteMiddleware(Router))
-</code></pre>
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-en">bodyParser</span>());
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-en">RouteMiddleware</span>(Router))</pre></div>
 
 <p>The above code will create the routes described, and call the functions
 implied with the following argument signature </p>
 
-<pre><code>(headers, params, body, app)
-</code></pre>
+<div class="highlight highlight-source-js"><pre>(params, headers, body, app)</pre></div>
 
 <p>where <code>app</code> is the Koa app context. Router supports standard CRUD opperations</p>
 
 <p>for example:</p>
 
-<pre><code>Router.GET('/user/:id', retrieve_user);
-Router.POST('/user', create_user);
-Router.PUT('/user/:id', update_user);
-Router.DELETE('/user/:id', delete_user);
-</code></pre>
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/:id<span class="pl-pds">'</span></span>, retrieve_user);
+<span class="pl-smi">Router</span>.<span class="pl-en">POST</span>(<span class="pl-s"><span class="pl-pds">'</span>/user<span class="pl-pds">'</span></span>, create_user);
+<span class="pl-smi">Router</span>.<span class="pl-en">PUT</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/:id<span class="pl-pds">'</span></span>, update_user);
+<span class="pl-smi">Router</span>.<span class="pl-en">DELETE</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/:id<span class="pl-pds">'</span></span>, delete_user);</pre></div>
 
 <h2>
 <a id="router-chaining-" class="anchor" href="#router-chaining-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Router Chaining </h2>
 
 <p>Routers can be created from other Routers without disturbing the original</p>
 
-<pre><code>const Router       = new RouteManager();
-Router.GET('/user/:id', retrieve_user);
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-c1">Router</span>       <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">RouteManager</span>();
+<span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/:id<span class="pl-pds">'</span></span>, retrieve_user);
 
-Router_2 = new RouteManager(Router);
-Router_2.Post('/user');
-</code></pre>
+Router_2 <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">RouteManager</span>(Router);
+<span class="pl-smi">Router_2</span>.<span class="pl-en">Post</span>(<span class="pl-s"><span class="pl-pds">'</span>/user<span class="pl-pds">'</span></span>, create_user);</pre></div>
 
 <p>In the above example, the Router object has 1 route (<code>GET '/user/:id'</code>), and the
 <code>Router_2</code> object has 2 (<code>GET '/user/:id'</code> and <code>POST '/user'</code>);</p>
@@ -92,13 +88,11 @@ is used. </p>
 
 <p>If the function is a string, the context is searched for the function's name</p>
 
-<pre><code>Router.get('/user/:id', [user, 'find']); //=&gt; user['find'].call(user, ...args)
-</code></pre>
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">Router</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/:id<span class="pl-pds">'</span></span>, [user, <span class="pl-s"><span class="pl-pds">'</span>find<span class="pl-pds">'</span></span>]); <span class="pl-c">//=&gt; user['find'].call(user, ...args)</span></pre></div>
 
 <p>Otherwise the function is called with the context given</p>
 
-<pre><code>Router.get('/user/:id', [user, retrieve_user]); //=&gt; retrieve_user.call(user, ...args)
-</code></pre>
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">Router</span>.<span class="pl-en">get</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/:id<span class="pl-pds">'</span></span>, [user, retrieve_user]); <span class="pl-c">//=&gt; retrieve_user.call(user, ...args)</span></pre></div>
 
 <h2>
 <a id="argument-translation-" class="anchor" href="#argument-translation-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Argument Translation </h2>
@@ -106,20 +100,19 @@ is used. </p>
 <p>Argument translators can be used to map the unweildy data from the request
 into something an environment-agnostic method can process</p>
 
-<pre><code>import Koa from 'koa';
-import bodyParser from 'koa-bodyparser';
-import RouteManager, { Send } from 'one-track';
-import RouteMiddleware from 'one-track-koa';
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> <span class="pl-smi">Koa</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>koa<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">bodyParser</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>koa-bodyparser<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">RouteManager</span>, { <span class="pl-smi">Send</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>one-track<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">RouteMiddleware</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>one-track-koa<span class="pl-pds">'</span></span>;
 
-import { retrieve_user } from './your-app';
+<span class="pl-k">import</span> { <span class="pl-smi">retrieve_user</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>./your-app<span class="pl-pds">'</span></span>;
 
-// translate the arguments that come from the koa app
-// into something that the retrieve_user method can understand
+<span class="pl-c">// translate the arguments that come from the koa app</span>
+<span class="pl-c">// into something that the retrieve_user method can understand</span>
 
-const koa_retrieve_user = Send((headers, params, body, app) =&gt; [params.id]).to(retrieve_user);
+<span class="pl-k">const</span> <span class="pl-c1">koa_retrieve_user</span> <span class="pl-k">=</span> <span class="pl-en">Send</span>((<span class="pl-smi">params</span>, <span class="pl-smi">headers</span>, <span class="pl-smi">body</span>, <span class="pl-smi">app</span>) <span class="pl-k">=&gt;</span> [<span class="pl-smi">params</span>.<span class="pl-c1">id</span>]).<span class="pl-en">to</span>(retrieve_user);
 
-Router.GET('/user/:id', koa_retrieve_user);
-</code></pre>
+<span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/user/:id<span class="pl-pds">'</span></span>, koa_retrieve_user);</pre></div>
 
 <p>This allows you to create functions that do not care about the environment that they 
 ultimately live in. This also allows functions to live in multiple contexts, and for
@@ -127,8 +120,92 @@ contexts to change, without affecting the business logic</p>
 
 <p>Argument translations also respond to the array notation given above</p>
 
-<pre><code>Send((headers, params, body, app) =&gt; [params.id]).to([User, retrieve_user]);
-</code></pre>
+<div class="highlight highlight-source-js"><pre><span class="pl-en">Send</span>((<span class="pl-smi">params</span>, <span class="pl-smi">headers</span>, <span class="pl-smi">body</span>, <span class="pl-smi">app</span>) <span class="pl-k">=&gt;</span> [<span class="pl-smi">params</span>.<span class="pl-c1">id</span>]).<span class="pl-en">to</span>([User, retrieve_user]);</pre></div>
+
+<h1>
+<a id="hello-world-with-koa2-" class="anchor" href="#hello-world-with-koa2-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hello World with Koa2 </h1>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> <span class="pl-smi">Koa</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>koa<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">bodyParser</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>koa-bodyparser<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">RouteManager</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>../index<span class="pl-pds">'</span></span>;
+<span class="pl-k">import</span> <span class="pl-smi">RouteMiddleware</span> <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>../one-track-koa<span class="pl-pds">'</span></span>;
+
+<span class="pl-k">const</span> <span class="pl-c1">app</span>          <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Koa</span>();
+<span class="pl-k">const</span> <span class="pl-c1">Router</span>       <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">RouteManager</span>();
+
+<span class="pl-k">function</span> <span class="pl-en">hello</span>({<span class="pl-smi">place</span>}){
+<span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in hello<span class="pl-pds">"</span></span>);
+<span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>hello, <span class="pl-pds">"</span></span><span class="pl-k">+</span>place
+}
+
+<span class="pl-k">function</span> <span class="pl-en">goodbye</span>(){
+<span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in goodbye<span class="pl-pds">"</span></span>);
+<span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>goodbye<span class="pl-pds">"</span></span>
+}
+
+<span class="pl-k">function</span> <span class="pl-en">say</span>(<span class="pl-smi">phrase</span>){
+<span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in say<span class="pl-pds">"</span></span>);
+<span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>say <span class="pl-pds">"</span></span><span class="pl-k">+</span>phrase;
+}
+
+<span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/hello/:place<span class="pl-pds">'</span></span>, hello);            <span class="pl-c">// =&gt; hello, {place}</span>
+<span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/say/hello/:place<span class="pl-pds">'</span></span>, hello, say);   <span class="pl-c">// =&gt; say hello, {place}      </span>
+<span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/say/goodbye<span class="pl-pds">'</span></span>, goodbye, say);      <span class="pl-c">// =&gt; say goodbye</span>
+<span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/goodbye<span class="pl-pds">'</span></span>, goodbye);               <span class="pl-c">// =&gt; goodbye</span>
+
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-en">bodyParser</span>());
+<span class="pl-smi">app</span>.<span class="pl-en">use</span>(<span class="pl-en">RouteMiddleware</span>(Router))
+
+<span class="pl-smi">app</span>.<span class="pl-en">listen</span>(<span class="pl-c1">3000</span>);
+<span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>app is listening<span class="pl-pds">"</span></span>);</pre></div>
+
+<h1>
+<a id="authentication-middleware-example-" class="anchor" href="#authentication-middleware-example-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Authentication Middleware Example </h1>
+
+<p>The two code samples below are functionally equivalent. The first simply does the job,
+the second takes advantage of argument translators to abstract the request from the 
+process of authentication</p>
+
+<h3>
+<a id="basic-signature-checking-authentication-middleware" class="anchor" href="#basic-signature-checking-authentication-middleware" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic signature-checking authentication middleware</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">function</span> <span class="pl-en">simple_auth</span>(<span class="pl-smi">params</span>, <span class="pl-smi">headers</span>, ...<span class="pl-smi">args</span>){
+  <span class="pl-k">if</span>(<span class="pl-en">sign</span>(<span class="pl-smi">headers</span>.<span class="pl-smi">user_id</span>, <span class="pl-c1">SECRET</span>) <span class="pl-k">!==</span> <span class="pl-smi">headers</span>.<span class="pl-smi">authorization</span>) <span class="pl-k">throw</span> {code<span class="pl-k">:</span><span class="pl-c1">401</span>, message<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Unauthorized<span class="pl-pds">"</span></span>}
+  <span class="pl-k">return</span> [params, headers, <span class="pl-k">...</span>args]
+}</pre></div>
+
+<h3>
+<a id="middleware-example-using-argument-translations" class="anchor" href="#middleware-example-using-argument-translations" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Middleware example using argument translations</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// this is a simple signature method that should not be used in production </span>
+<span class="pl-k">const</span> <span class="pl-c1">sign</span>  <span class="pl-k">=</span> (<span class="pl-smi">user</span>, <span class="pl-smi">secret</span><span class="pl-k">=</span><span class="pl-smi">SECRET</span>) <span class="pl-k">=&gt;</span> user<span class="pl-k">+</span>secret;
+
+<span class="pl-c">// step 1: translate args to a method your validation function will understand.</span>
+<span class="pl-c">//         in this case we are returning the user id and auth sent in the header</span>
+<span class="pl-c">//         followed by the rest of the arguments in the appropriate order</span>
+<span class="pl-k">function</span> <span class="pl-en">authentication_arguments</span>(<span class="pl-smi">params</span>, <span class="pl-smi">headers</span>, ...<span class="pl-smi">args</span>){
+  <span class="pl-k">return</span> [<span class="pl-smi">headers</span>.<span class="pl-smi">user_id</span>, <span class="pl-smi">headers</span>.<span class="pl-smi">authorization</span>, params, headers, <span class="pl-k">...</span>args]
+}
+
+<span class="pl-c">// step 2: validate the user and return the remaining arguments</span>
+<span class="pl-k">function</span> <span class="pl-en">validate_authentication</span>(<span class="pl-smi">user</span>, <span class="pl-smi">token</span>, ...<span class="pl-smi">args</span>){
+   <span class="pl-k">if</span>(<span class="pl-en">sign</span>(user, <span class="pl-c1">SECRET</span>) <span class="pl-k">!==</span> token) <span class="pl-k">throw</span> {code<span class="pl-k">:</span><span class="pl-c1">401</span>, message<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Unauthorized<span class="pl-pds">"</span></span>}
+   <span class="pl-k">return</span> args
+}
+
+<span class="pl-c">// step 3: create the authentication middleware by sending the proper authentication</span>
+<span class="pl-c">//         arguments to the authentication checker</span>
+<span class="pl-k">const</span> <span class="pl-c1">authenticate</span> <span class="pl-k">=</span> <span class="pl-en">Send</span>(authentication_arguments).<span class="pl-en">to</span>(validate_authentication);</pre></div>
+
+<h3>
+<a id="example-usage-of-above-middleware" class="anchor" href="#example-usage-of-above-middleware" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>example usage of above middleware</h3>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-c">// example request headers:</span>
+<span class="pl-c">//   user_id      : APPLE</span>
+<span class="pl-c">//   Authorization: APPLESAUCE</span>
+<span class="pl-c1">R2</span>.<span class="pl-en">POST</span>(<span class="pl-s"><span class="pl-pds">'</span>/goodbye/:say<span class="pl-pds">'</span></span>, authenticate,
+                      <span class="pl-en">Send</span>((<span class="pl-smi">params</span>)<span class="pl-k">=&gt;</span>[<span class="pl-smi">params</span>.<span class="pl-smi">say</span>]).<span class="pl-en">to</span>(goodbye),
+                      say);       </pre></div>
 
 <h2>
 <a id="general-usage-" class="anchor" href="#general-usage-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General Usage </h2>
@@ -136,115 +213,50 @@ contexts to change, without affecting the business logic</p>
 <p>One-Track does not require a server to work. Any application which can
 receive events can be routed through this software.</p>
 
-<pre><code>import RouteManager, { Send, GET } from 'one-track';
-const Router = new RouteManager();
+<div class="highlight highlight-source-js"><pre><span class="pl-k">import</span> <span class="pl-smi">RouteManager</span>, { <span class="pl-smi">Send</span>, <span class="pl-smi">GET</span> } <span class="pl-k">from</span> <span class="pl-s"><span class="pl-pds">'</span>one-track<span class="pl-pds">'</span></span>;
+<span class="pl-k">const</span> <span class="pl-c1">Router</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">RouteManager</span>();
 
-Router.GET('/path/:id/other/:info', another_function);
-</code></pre>
+<span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/path/:id/other/:info<span class="pl-pds">'</span></span>, another_function);</pre></div>
 
 <p>In this case, calling</p>
 
-<pre><code>Router.find(GET, '/path/some_id/other/text_to_send')
-</code></pre>
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">Router</span>.<span class="pl-c1">find</span>(<span class="pl-c1">GET</span>, <span class="pl-s"><span class="pl-pds">'</span>/path/some_id/other/text_to_send<span class="pl-pds">'</span></span>, arg1, arg2)</pre></div>
 
 <p>is basically equivalent to calling</p>
 
-<pre><code>(function(){
-  return new Promise(resolve, reject){
-    resolve(another_function.call(this, ...arguments));
-  }
-})()
-</code></pre>
-
-<h1>
-<a id="hello-world-with-koa2-" class="anchor" href="#hello-world-with-koa2-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hello World with Koa2 </h1>
-
-<pre><code>import Koa from 'koa';
-import bodyParser from 'koa-bodyparser';
-import RouteManager from '../index';
-import RouteMiddleware from '../one-track-koa';
-
-const app          = new Koa();
-const Router       = new RouteManager();
-
-function hello({place}){
-  console.log("in hello");
-  return "hello, "+place
+<div class="highlight highlight-source-js"><pre>(<span class="pl-k">function</span>(){
+<span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-en">Promise</span>(resolve, reject){
+  <span class="pl-en">resolve</span>(<span class="pl-smi">another_function</span>.<span class="pl-c1">call</span>(<span class="pl-v">this</span>, <span class="pl-k">...</span>arguments));
 }
+})()</pre></div>
 
-function goodbye(){
-  console.log("in goodbye");
-  return "goodbye"
+<p>where <code>arg_1</code> and <code>arg_2</code> would be passed into <code>another_function</code>, since
+they are being passed in through the final arguments send in with <code>Router.find</code>.
+So, the koa middleware really ends up being as simple as setting the body of 
+the response to the result of the request path's function, with the relevant 
+info of the body, headers, and Koa context passed in as arguments</p>
+
+<h3>
+<a id="one-track-koa-middleware" class="anchor" href="#one-track-koa-middleware" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>one-track-koa middleware</h3>
+
+<p>The default one-track-koa middleware is as follows. However, only the first 
+two arguments sent to <code>.find()</code> are required. The remaining arguments indicate
+the arguments that will be sent to the function indicated by <code>.find()</code>.</p>
+
+<p>In other words, altering this middleware to send different information to your
+application is as trivial as adding, removing, or changing arguments after the
+reference to <code>ctx.path</code></p>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-k">const</span> <span class="pl-c1">middleware</span> <span class="pl-k">=</span> (<span class="pl-smi">Router</span>) <span class="pl-k">=&gt;</span> <span class="pl-k">async</span> (<span class="pl-smi">ctx</span>, <span class="pl-smi">next</span>) <span class="pl-k">=&gt;</span> {
+  <span class="pl-smi">ctx</span>.<span class="pl-c1">body</span> <span class="pl-k">=</span> <span class="pl-k">await</span> Router
+                    .<span class="pl-c1">find</span>(<span class="pl-smi">ctx</span>.<span class="pl-c1">method</span>, <span class="pl-smi">ctx</span>.<span class="pl-smi">path</span>, <span class="pl-smi">ctx</span>.<span class="pl-smi">request</span>.<span class="pl-c1">body</span>, <span class="pl-smi">ctx</span>.<span class="pl-c1">headers</span>, ctx)
+                    .<span class="pl-en">catch</span>((<span class="pl-smi">err</span>) <span class="pl-k">=&gt;</span> {
+                      <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-smi">err</span>.<span class="pl-smi">stack</span><span class="pl-k">||</span>err);
+                      <span class="pl-smi">ctx</span>.<span class="pl-c1">status</span> <span class="pl-k">=</span> <span class="pl-smi">err</span>.<span class="pl-c1">code</span><span class="pl-k">||</span><span class="pl-smi">ctx</span>.<span class="pl-c1">status</span>;
+                      <span class="pl-k">return</span> err;
+                    });
 }
-
-function say(phrase){
-  console.log("in say");
-  return "say "+phrase;
-}
-
-Router.GET('/hello/:place', hello);            // =&gt; hello, {place}
-Router.GET('/say/hello/:place', hello, say);   // =&gt; say hello, {place}      
-Router.GET('/say/goodbye', goodbye, say);      // =&gt; say goodbye
-Router.GET('/goodbye', goodbye);               // =&gt; goodbye
-
-app.use(bodyParser());
-app.use(RouteMiddleware(Router))
-
-app.listen(3000);
-console.log("app is listening");
-</code></pre>
-
-<h1>
-<a id="more-examples-" class="anchor" href="#more-examples-" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>More Examples </h1>
-
-<p>== Authentication Middleware: 2 ways</p>
-
-<p>The first method uses argument translations </p>
-
-<pre><code>  // this is a simple signature method that should not be used in production 
-  const sign  = (user, secret=SECRET) =&gt; user+secret;
-
-  // step 1: translate args to a method your validation function will understand.
-  //         in this case we are returning the user id and auth sent in the header
-  //         followed by the rest of the arguments in the appropriate order
-  function authentication_arguments(headers, ...args){
-    return [headers.user_id, headers.authorization, headers, ...args]
-  }
-
-  // step 2: validate the user and return the remaining arguments
-  function validate_authentication(user, token, ...args){
-     if(sign(user, SECRET) !== token) throw {code:401, message:"Unauthorized"}
-     return args
-  }
-
-  // step 3: create the authentication middleware by sending the proper authentication
-  //         arguments to the authentication checker
-  const authenticate = Send(authentication_arguments).to(validate_authentication);
-</code></pre>
-
-<p>The second just does the job</p>
-
-<pre><code>/***************************************/
-  // NOTE: very little of the above is actually required. The following function `simple_auth`
-  //       and the constant `authenticate` created above are functionally equivalent.
-  //       the advantage of the `authenticate` constant being that the algorithm is not 
-  //       tied to the request-related arguments as they are sent
-  function simple_auth(headers, ...args){
-    if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
-    return [headers, ...args]
-  }
-/***************************************/
-</code></pre>
-
-<p>example usage of above middleware</p>
-
-<pre><code>// example request headers:
-//   user_id      : APPLE
-//   Authorization: APPLESAUCE
-R2.POST('/goodbye/:say', authenticate,
-                        Send((headers, params)=&gt;[params.say]).to(goodbye),
-                        say);       
-</code></pre>
+<span class="pl-k">export</span> <span class="pl-v">default</span> <span class="pl-smi">middleware</span></pre></div>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/whtevn/one-track">One-track</a> is maintained by <a href="https://github.com/whtevn">whtevn</a>.</span>
