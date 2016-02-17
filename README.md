@@ -167,7 +167,7 @@ The two code samples below are functionally equivalent. The first simply does th
 the second takes advantage of argument translators to abstract the request from the 
 process of authentication
 
-## Basic signature-checking authentication middleware  
+### Basic signature-checking authentication middleware  
 
 ```js
 function simple_auth(headers, ...args){
@@ -176,9 +176,7 @@ function simple_auth(headers, ...args){
 }
 ```
 
-## Middleware example using argument translations
-
-The first method uses argument translations 
+### Middleware example using argument translations
 
 ```js
 // this is a simple signature method that should not be used in production 
@@ -202,7 +200,7 @@ function validate_authentication(user, token, ...args){
 const authenticate = Send(authentication_arguments).to(validate_authentication);
 ```
 
-example usage of above middleware
+### example usage of above middleware
 
 ```js
 // example request headers:
