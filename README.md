@@ -163,6 +163,21 @@ console.log("app is listening");
 Authentication Middleware Example 
 =================================
 
+The two code samples below are functionally equivalent. The first simply does the job,
+the second takes advantage of argument translators to abstract the request from the 
+process of authentication
+
+## Basic signature-checking authentication middleware  
+
+```js
+function simple_auth(headers, ...args){
+  if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
+  return [headers, ...args]
+}
+```
+
+## Middleware example using argument translations
+
 The first method uses argument translations 
 
 ```js
@@ -185,18 +200,6 @@ function validate_authentication(user, token, ...args){
 // step 3: create the authentication middleware by sending the proper authentication
 //         arguments to the authentication checker
 const authenticate = Send(authentication_arguments).to(validate_authentication);
-```
-
-very little of the above is actually required. The following function `simple_auth`
-and the constant `authenticate` created above are functionally equivalent.
-the advantage of the `authenticate` constant being that the algorithm is not 
-tied to the request-related arguments as they are sent
-
-```js
-function simple_auth(headers, ...args){
-  if(sign(headers.user_id, SECRET) !== headers.authorization) throw {code:401, message:"Unauthorized"}
-  return [headers, ...args]
-}
 ```
 
 example usage of above middleware
