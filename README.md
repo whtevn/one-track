@@ -134,18 +134,18 @@ const app          = new Koa();
 const Router       = new RouteManager();
 
 function hello(place){
-console.log("in hello");
-return "hello, "+place
+  console.log("in hello");
+  return "hello, "+place
 }
 
 function goodbye(){
-console.log("in goodbye");
-return "goodbye"
+  console.log("in goodbye");
+  return "goodbye"
 }
 
 function say(phrase){
-console.log("in say");
-return "say "+phrase;
+  console.log("in say");
+  return "say "+phrase;
 }
 
 Router.GET('/hello/:place', hello);            // => hello, {place}
@@ -234,9 +234,9 @@ is basically equivalent to calling
 
 ```js
 (function(){
-return new Promise(resolve, reject){
-  resolve(another_function.call(this, ...arguments));
-}
+  return new Promise(resolve, reject){
+    resolve(another_function.call(this, ...arguments));
+  }
 })()
 ```
 
