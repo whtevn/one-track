@@ -77,7 +77,7 @@ var RouteManager = function () {
   }, {
     key: 'export_routes',
     value: function export_routes() {
-      return duplicate(this.routes);
+      return (0, _pathify.duplicate)(this.routes);
     }
   }]);
 
@@ -85,8 +85,3 @@ var RouteManager = function () {
 }();
 
 exports.default = RouteManager;
-
-
-function duplicate(obj) {
-  return obj.asImmutable();
-}

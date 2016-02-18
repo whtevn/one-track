@@ -3,16 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BAD_ROUTER = exports.NO_SUCH_ROUTE = exports.DELETE = exports.PUT = exports.POST = exports.GET = exports.INITIAL_ROUTES = undefined;
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
+exports.BAD_ROUTER = exports.DELETE = exports.PUT = exports.POST = exports.GET = exports.INITIAL_ROUTES = undefined;
 exports.duplicate = duplicate;
 exports.add_route = add_route;
 
 var _immutable = require('immutable');
-
-var _functionBindery = require('./function-bindery');
 
 var escapeStringRegexp = require('escape-string-regexp');
 
@@ -22,13 +17,10 @@ var GET = exports.GET = 'GET';
 var POST = exports.POST = 'POST';
 var PUT = exports.PUT = 'PUT';
 var DELETE = exports.DELETE = 'DELETE';
-var NO_SUCH_ROUTE = exports.NO_SUCH_ROUTE = { code: 404, msg: 'NO SUCH ROUTE' };
 var BAD_ROUTER = exports.BAD_ROUTER = new Error("bad router given in generator");
 
 function duplicate(obj) {
-  if (!obj.routes || !_typeof(obj.routes.asImmutable) === 'function') throw BAD_ROUTER;
-
-  return obj.routes.asImmutable();
+  return obj.asImmutable();
 }
 
 function add_route(routes, method, path) {
@@ -50,7 +42,7 @@ function routify() {
 }
 
 function regexify(path) {
-  var regex = new RegExp(/:([^\/]*)/, 'g');
+  var regex = new RegExp(':([^\\/]*)', 'g');
   return {
     params: (path.match(regex) || []).map(function (x) {
       return x.replace(':', '');
