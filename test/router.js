@@ -120,7 +120,18 @@ describe("the Router", ()=>{
           .catch(done)
     })
   })
+
+  describe("reading parameters", ()=>{
+    beforeEach(()=>{
+      Router = Router.GET('/hello/:name', (params)=>params.name);
+    })
+    it("should return an object of the parameters as the first argument", (done)=>{
+        Router.find('GET', '/hello/hal')
+          .then((result)=>{
+            expect(result).to.equal('hal');
+          })
+          .then(done)
+          .catch(done)
+    })
+  })
 })
-
-
-

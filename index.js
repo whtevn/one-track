@@ -37,5 +37,4 @@ export default class RouteManager {
   export_routes(){
     return duplicate(this.routes);
   }
-
 } 
