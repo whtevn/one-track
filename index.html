@@ -134,18 +134,18 @@ contexts to change, without affecting the business logic</p>
 <span class="pl-k">const</span> <span class="pl-c1">Router</span>       <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">RouteManager</span>();
 
 <span class="pl-k">function</span> <span class="pl-en">hello</span>(<span class="pl-smi">place</span>){
-<span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in hello<span class="pl-pds">"</span></span>);
-<span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>hello, <span class="pl-pds">"</span></span><span class="pl-k">+</span>place
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in hello<span class="pl-pds">"</span></span>);
+  <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>hello, <span class="pl-pds">"</span></span><span class="pl-k">+</span>place
 }
 
 <span class="pl-k">function</span> <span class="pl-en">goodbye</span>(){
-<span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in goodbye<span class="pl-pds">"</span></span>);
-<span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>goodbye<span class="pl-pds">"</span></span>
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in goodbye<span class="pl-pds">"</span></span>);
+  <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>goodbye<span class="pl-pds">"</span></span>
 }
 
 <span class="pl-k">function</span> <span class="pl-en">say</span>(<span class="pl-smi">phrase</span>){
-<span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in say<span class="pl-pds">"</span></span>);
-<span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>say <span class="pl-pds">"</span></span><span class="pl-k">+</span>phrase;
+  <span class="pl-en">console</span>.<span class="pl-c1">log</span>(<span class="pl-s"><span class="pl-pds">"</span>in say<span class="pl-pds">"</span></span>);
+  <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">"</span>say <span class="pl-pds">"</span></span><span class="pl-k">+</span>phrase;
 }
 
 <span class="pl-smi">Router</span>.<span class="pl-en">GET</span>(<span class="pl-s"><span class="pl-pds">'</span>/hello/:place<span class="pl-pds">'</span></span>, hello);            <span class="pl-c">// =&gt; hello, {place}</span>
@@ -225,9 +225,9 @@ receive events can be routed through this software.</p>
 <p>is basically equivalent to calling</p>
 
 <div class="highlight highlight-source-js"><pre>(<span class="pl-k">function</span>(){
-<span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-en">Promise</span>(resolve, reject){
-  <span class="pl-en">resolve</span>(<span class="pl-smi">another_function</span>.<span class="pl-c1">call</span>(<span class="pl-v">this</span>, <span class="pl-k">...</span>arguments));
-}
+  <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-en">Promise</span>(resolve, reject){
+    <span class="pl-en">resolve</span>(<span class="pl-smi">another_function</span>.<span class="pl-c1">call</span>(<span class="pl-v">this</span>, <span class="pl-k">...</span>arguments));
+  }
 })()</pre></div>
 
 <p>where <code>arg_1</code> and <code>arg_2</code> would be passed into <code>another_function</code>, since
