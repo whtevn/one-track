@@ -8,7 +8,7 @@ npm install one-track --save
 if intending to use with koa2
 
 ```
-npm install one-track one-track-koa koa@next koa-bodyparse@3 --save
+npm install one-track one-track-koa koa@next koa-bodyparser@3 --save
 ```
 
 note that none of those are required to use this package, but they are 
