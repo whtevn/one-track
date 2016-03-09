@@ -2,7 +2,7 @@
     import Koa from 'koa';
     import bodyParser from 'koa-bodyparser';
     import RouteManager, { Send } from '../index';
-    import RouteMiddleware from '../one-track-koa/index';
+    import RouteMiddleware from 'one-track-koa';
 
     const app    = new Koa();
     const Router = new RouteManager();
