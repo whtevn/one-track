@@ -3,8 +3,7 @@ import {
    POST,
    PUT,
    DELETE,
-   add_route,
-   duplicate
+   add_route
  }   from './lib/pathify';
 
 import {
@@ -16,8 +15,8 @@ export { Send } from './lib/function-bindery';
 export { GET, POST, PUT, DELETE, IS_ARRAY }  ;
 
 export default class RouteManager {
-  constructor(router=undefined){
-    if(router) this.routes = router.export_routes();
+  constructor(...routers){
+    this.routes = this.export_routes(this, ...routers);
   }
                                                                
   GET()    { return this.new_route(GET,    ...arguments); }   
@@ -34,7 +33,10 @@ export default class RouteManager {
     return find_and_run(this.routes, method, path, ...args);
   }
 
-  export_routes(){
-    return duplicate(this.routes);
+  export_routes(router, ...routers){
+    if(!routers.length) return router.routes
+
+    return routers.map(r=>r.routes)
+                  .reduce((prev, cur) => cur.mergeDeep(prev), router.routes)
   }
 } 
