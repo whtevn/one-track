@@ -4,7 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.BAD_ROUTER = exports.DELETE = exports.PUT = exports.POST = exports.GET = exports.INITIAL_ROUTES = undefined;
-exports.duplicate = duplicate;
 exports.add_route = add_route;
 
 var _immutable = require('immutable');
@@ -18,10 +17,6 @@ var POST = exports.POST = 'POST';
 var PUT = exports.PUT = 'PUT';
 var DELETE = exports.DELETE = 'DELETE';
 var BAD_ROUTER = exports.BAD_ROUTER = new Error("bad router given in generator");
-
-function duplicate(obj) {
-  return obj.asImmutable();
-}
 
 function add_route(routes, method, path) {
   for (var _len = arguments.length, func_set = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
