@@ -43,6 +43,20 @@ describe("the Router", ()=>{
         .then(done);
     })
 
+    describe("with a trailing forward slash", ()=>{
+      beforeEach(()=>{
+        Router = Router.GET('/unique/', ()=>'hello');
+      })
+
+      it("should allow that route to then be found", (done)=>{
+        Router.find('GET', '/unique')
+          .then((result)=>{
+            expect(result).to.equal('hello');
+          })
+          .catch((err)=>done(err))
+          .then(done);
+      })
+    })
     describe("without a beginning forward slash", ()=>{
       beforeEach(()=>{
         Router = Router.GET('unique', ()=>'hello');
