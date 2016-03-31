@@ -43,9 +43,40 @@ describe("the Router", ()=>{
         .then(done);
     })
 
+    describe("that is a duplicate route", ()=>{
+      beforeEach(()=>{
+        Router = Router.GET('/dup/', ()=>'hello');
+      })
+      afterEach(()=>{
+        Router = new RouteManager();
+      })
+      it("should not throw an error", function(){
+        expect(()=>Router.GET('/dup', ()=>'nope')).not.to.throw();
+      })
+
+      describe("when retrieving the route", ()=>{
+        beforeEach(()=>{
+          Router = Router.GET('/dup/', ()=>'hello');
+        })
+        afterEach(()=>{
+          Router = new RouteManager();
+        })
+        it("should find the first one added", (done)=>{
+          Router.find('GET', '/dup')
+            .then((result)=>{
+              expect(result).to.equal('hello');
+            })
+            .then(done)
+        })
+      })
+    })
+
     describe("with a trailing forward slash", ()=>{
       beforeEach(()=>{
         Router = Router.GET('/unique/', ()=>'hello');
+      })
+      afterEach(()=>{
+        Router = new RouteManager();
       })
 
       it("should allow that route to then be found", (done)=>{
@@ -115,13 +146,13 @@ describe("the Router", ()=>{
     describe("with one element", ()=>{
       beforeEach(()=>{
         result = [1];
-        Router = Router.GET('/hello', ()=>result);
+        Router = Router.GET('/unique', ()=>result);
       })
       afterEach(()=>{
         Router = new RouteManager();
       })
       it("should not require special treatment", (done)=>{
-        Router.find('GET', '/hello')
+        Router.find('GET', '/unique')
           .then((result)=>{
             expect(result).to.deep.equal(result);
           })

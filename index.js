@@ -25,7 +25,11 @@ export default class RouteManager {
   DELETE() { return this.new_route(DELETE, ...arguments); } 
   
   new_route(method, ...args) {                                
-    this.routes = add_route(this.routes, method, ...args); 
+    try {
+      this.routes = add_route(this.routes, method, ...args); 
+    } catch (err) {
+      console.log(err);
+    }
     return this;                                          
   }
 
