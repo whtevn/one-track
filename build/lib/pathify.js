@@ -37,6 +37,7 @@ function routify() {
 }
 
 function regexify(path) {
+  if (!path.match(/^\//)) path = '/' + path;
   var regex = new RegExp(':([^\\/]*)', 'g');
   return {
     params: (path.match(regex) || []).map(function (x) {
