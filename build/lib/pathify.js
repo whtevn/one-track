@@ -18,6 +18,9 @@ var PUT = exports.PUT = 'PUT';
 var DELETE = exports.DELETE = 'DELETE';
 var BAD_ROUTER = exports.BAD_ROUTER = new Error("bad router given in generator");
 
+var DUPLICATE_ROUTE = function DUPLICATE_ROUTE(method, path) {
+  return new Error('DUPLICATED ROUTE: ' + method + ' ' + path);
+};
 function add_route(routes, method, path) {
   for (var _len = arguments.length, func_set = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
     func_set[_key - 3] = arguments[_key];
@@ -32,6 +35,8 @@ function routify() {
   var routes = arguments.length <= 0 || arguments[0] === undefined ? INITIAL_ROUTES : arguments[0];
   var method = arguments.length <= 1 || arguments[1] === undefined ? GET : arguments[1];
   var opts = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+  if (routes.getIn([method, opts.path.description])) throw DUPLICATE_ROUTE(method, opts.path.description);
 
   return opts.path ? routes.setIn([method, opts.path.description], opts) : routes;
 }

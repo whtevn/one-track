@@ -60,11 +60,15 @@ var RouteManager = function () {
   }, {
     key: 'new_route',
     value: function new_route(method) {
-      for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        args[_key2 - 1] = arguments[_key2];
-      }
+      try {
+        for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+          args[_key2 - 1] = arguments[_key2];
+        }
 
-      this.routes = _pathify.add_route.apply(undefined, [this.routes, method].concat(args));
+        this.routes = _pathify.add_route.apply(undefined, [this.routes, method].concat(args));
+      } catch (err) {
+        console.log(err);
+      }
       return this;
     }
   }, {
