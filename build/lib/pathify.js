@@ -41,7 +41,7 @@ function routify() {
   var method = arguments.length <= 1 || arguments[1] === undefined ? GET : arguments[1];
   var opts = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
-  if (opts.path && routes.getIn([method, opts.path.description])) throw DUPLICATE_ROUTE(method, opts.path.description);
+  if (opts.path && routes.getIn([method, opts.path.description])) throw DUPLICATE_ROUTE(method, opts.path.path);
 
   return opts.path ? routes.setIn([method, opts.path.description], opts) : routes;
 }
