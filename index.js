@@ -3,7 +3,8 @@ import {
    POST,
    PUT,
    DELETE,
-   add_route
+   new_route,
+   combine_routers
  }   from './lib/pathify';
 
 import {
@@ -16,31 +17,29 @@ export { GET, POST, PUT, DELETE, IS_ARRAY }  ;
 
 export default class RouteManager {
   constructor(...routers){
-    this.routes = this.export_routes(this, ...routers);
+    this.routes = combine_routers(this, ...routers);
   }
                                                                
-  GET()    { return this.new_route(GET,    ...arguments); }   
-  POST()   { return this.new_route(POST,   ...arguments); }    
-  PUT()    { return this.new_route(PUT,    ...arguments); }  
-  DELETE() { return this.new_route(DELETE, ...arguments); } 
-  
-  new_route(method, ...args) {                                
-    try {
-      this.routes = add_route(this.routes, method, ...args); 
-    } catch (err) {
-      console.log(err);
-    }
-    return this;                                          
-  }
+  GET()    { 
+    this.routes = new_route(this.routes, GET, ...arguments); 
+    return this;
+  }   
+  POST()   {
+    this.routes = new_route(this.routes, POST,...arguments);
+    return this;
+  }    
+  PUT()    {
+    this.routes = new_route(this.routes, PUT, ...arguments);
+    return this;
+  }  
+  DELETE() {
+    this.routes = new_route(this.routes, DELETE, ...arguments); 
+    return this;
+  } 
 
   find(method, path, ...args){
     return find_and_run(this.routes, method, path, ...args);
   }
 
-  export_routes(router, ...routers){
-    if(!routers.length) return router.routes
-
-    return routers.map(r=>r.routes)
-                  .reduce((prev, cur) => cur.mergeDeep(prev), router.routes)
-  }
 } 
+
